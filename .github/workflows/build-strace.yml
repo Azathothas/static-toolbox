@@ -1,4 +1,8 @@
 name: strace
+
+env:
+  GITHUB_TOKEN: ${{ secrets.STATIC_TOOLBOX }}
+  
 on:
   workflow_dispatch
 jobs:
@@ -10,7 +14,7 @@ jobs:
         version: ${{ steps.build_strace.outputs.PACKAGED_VERSION }}
       steps:
         - name: Checkout
-          uses: actions/checkout@v2
+          uses: actions/checkout@v3
 
         - name: Install dependencies
           run: sudo apk update && sudo apk add bash && sudo bash build/install_deps_alpine.sh
@@ -31,7 +35,7 @@ jobs:
           run: $GITHUB_WORKSPACE/build/targets/build_strace.sh x86
 
         - name: Upload artifacts
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v3
           with:
               name: ${{ steps.build_strace.outputs.PACKAGED_NAME }}
               path: ${{ steps.build_strace.outputs.PACKAGED_NAME_PATH }}
@@ -42,7 +46,7 @@ jobs:
       container: muslcc/x86_64:x86_64-linux-musl
       steps:
         - name: Checkout
-          uses: actions/checkout@v2
+          uses: actions/checkout@v3
 
         - name: Install dependencies
           run: sudo apk update && sudo apk add bash && sudo bash build/install_deps_alpine.sh
@@ -55,7 +59,7 @@ jobs:
           run: $GITHUB_WORKSPACE/build/targets/build_strace.sh x86_64
 
         - name: Upload artifacts
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v3
           with:
               name: ${{ steps.build_strace.outputs.PACKAGED_NAME }}
               path: ${{ steps.build_strace.outputs.PACKAGED_NAME_PATH }}
@@ -66,7 +70,7 @@ jobs:
       container: muslcc/x86_64:arm-linux-musleabihf
       steps:
         - name: Checkout
-          uses: actions/checkout@v2
+          uses: actions/checkout@v3
 
         - name: Install dependencies
           run: sudo apk update && sudo apk add bash && sudo bash build/install_deps_alpine.sh
@@ -87,7 +91,7 @@ jobs:
           run: $GITHUB_WORKSPACE/build/targets/build_strace.sh armhf
 
         - name: Upload artifacts
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v3
           with:
               name: ${{ steps.build_strace.outputs.PACKAGED_NAME }}
               path: ${{ steps.build_strace.outputs.PACKAGED_NAME_PATH }}
@@ -98,7 +102,7 @@ jobs:
         container: muslcc/x86_64:aarch64-linux-musl
         steps:
           - name: Checkout
-            uses: actions/checkout@v2
+            uses: actions/checkout@v3
 
           - name: Install dependencies
             run: sudo apk update && sudo apk add bash && sudo bash build/install_deps_alpine.sh
@@ -119,7 +123,7 @@ jobs:
             run: $GITHUB_WORKSPACE/build/targets/build_strace.sh aarch64
 
           - name: Upload artifacts
-            uses: actions/upload-artifact@v2
+            uses: actions/upload-artifact@v3
             with:
                 name: ${{ steps.build_strace.outputs.PACKAGED_NAME }}
                 path: ${{ steps.build_strace.outputs.PACKAGED_NAME_PATH }}
@@ -130,13 +134,13 @@ jobs:
       needs: [build-x86, build-x86_64, build-armhf, build-aarch64]
       steps:
         - name: Checkout
-          uses: actions/checkout@v2
+          uses: actions/checkout@v3
 
         - name: Prepare Environment
           run: mkdir /tmp/releases
 
         - name: Download Artifacts
-          uses: actions/download-artifact@v2
+          uses: actions/download-artifact@v3
           with:
             path: /tmp/releases
 
@@ -156,11 +160,15 @@ jobs:
               echo "NEW_RELEASE=true" >> $GITHUB_OUTPUT
             fi
 
-        - name: Create Release
-          uses: ncipollo/release-action@v1
+        - name: Releaser
+          uses: softprops/action-gh-release@v0.1.15
           if: ${{ steps.tag_release.outputs.NEW_RELEASE == 'true' }}
           with:
-            name: strace-v${{ needs.build-x86.outputs.version }}
-            tag: strace-v${{ needs.build-x86.outputs.version }}
-            artifacts: "/tmp/releases/*/*"
-            token: ${{ secrets.GITHUB_TOKEN }}
+            name: "strace-v${{ needs.build-x86.outputs.version }}"
+            tag_name: "strace-v${{ needs.build-x86.outputs.version }}"
+            prerelease: false
+            draft: false
+            generate_release_notes: false
+            token: "${{ secrets.GITHUB_TOKEN }}"
+            files: |
+              /tmp/releases/*/*
