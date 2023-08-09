@@ -1,32 +1,32 @@
 #!/bin/sh
 apk update
 apk add \
-    bash \
-    git \
-    perl \
-    make \
-    cmake \
-    flex \
-    jq \
-    bison \
-    automake \
     autoconf \
+    automake \
+    bash \
+    bison \
+    cmake \
+    coreutils \
+    curl \
+    file \
+    flex \
+    gawk \
+    git \
+    gmp-dev \
+    jq \
+    libffi-dev \
     libtool \
-    qemu-arm \
+    libunistring-dev \
+    lttng-ust-dev \
+    make \
+    patch \
+    perl \
     qemu-aarch64 \
+    qemu-arm \
     qemu-ppc \
     qemu-ppc64 \
-    file \
-    texinfo \
-    zip \
-    wget \
-    coreutils \
-    gawk \
-    gmp-dev \
-    libunistring-dev \
-    libffi-dev \
-    lttng-ust-dev \
-    curl \
     rsync \
+    texinfo \
     util-linux \
-    patch
+    wget \
+    zip 
