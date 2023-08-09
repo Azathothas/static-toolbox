@@ -1,6 +1,12 @@
-name: socat
+name: ⚙️ Build Socat 📦
+#MAX_RUNTIME:
 on:
   workflow_dispatch
+  
+env:
+  GITHUB_TOKEN: ${{ secrets.STATIC_TOOLBOX }}
+
+#------------------------------------------------------------------------------------#
 jobs:
     build-x86:
       name: Build socat x86
@@ -27,7 +33,7 @@ jobs:
           with:
               name: ${{ steps.build_socat.outputs.PACKAGED_NAME }}
               path: ${{ steps.build_socat.outputs.PACKAGED_NAME_PATH }}
-
+#------------------------------------------------------------------------------------#
     build-x86_64:
       name: Build socat x86_64
       runs-on: ubuntu-latest
@@ -51,7 +57,7 @@ jobs:
           with:
               name: ${{ steps.build_socat.outputs.PACKAGED_NAME }}
               path: ${{ steps.build_socat.outputs.PACKAGED_NAME_PATH }}
-
+#------------------------------------------------------------------------------------#
     build-armhf:
       name: Build socat ARMHF
       runs-on: ubuntu-latest
@@ -83,7 +89,7 @@ jobs:
           with:
               name: ${{ steps.build_socat.outputs.PACKAGED_NAME }}
               path: ${{ steps.build_socat.outputs.PACKAGED_NAME_PATH }}
-
+#------------------------------------------------------------------------------------#
     build-aarch64:
         name: Build socat AARCH64
         runs-on: ubuntu-latest
@@ -115,7 +121,7 @@ jobs:
             with:
                 name: ${{ steps.build_socat.outputs.PACKAGED_NAME }}
                 path: ${{ steps.build_socat.outputs.PACKAGED_NAME_PATH }}
-
+#------------------------------------------------------------------------------------#
     build-ppc32:
         name: Build socat powerpc32
         runs-on: ubuntu-latest
@@ -147,7 +153,7 @@ jobs:
             with:
                 name: ${{ steps.build_socat.outputs.PACKAGED_NAME }}
                 path: ${{ steps.build_socat.outputs.PACKAGED_NAME_PATH }}
-
+#------------------------------------------------------------------------------------#
     build-ppc64:
         name: Build socat powerpc64
         runs-on: ubuntu-latest
@@ -179,7 +185,7 @@ jobs:
             with:
                 name: ${{ steps.build_socat.outputs.PACKAGED_NAME }}
                 path: ${{ steps.build_socat.outputs.PACKAGED_NAME_PATH }}
-
+#------------------------------------------------------------------------------------#
     create-release:
       name: Create socat Release
       runs-on: ubuntu-latest
@@ -211,12 +217,20 @@ jobs:
               git push origin "socat-v${{ needs.build-x86.outputs.version }}"
               echo "NEW_RELEASE=true" >> $GITHUB_OUTPUT
             fi
-
-        - name: Create Release
-          uses: ncipollo/release-action@v1
+#------------------------------------------------------------------------------------#
+        - name: Releaser
+          uses: softprops/action-gh-release@v0.1.15
           if: ${{ steps.tag_release.outputs.NEW_RELEASE == 'true' }}
           with:
-            name: socat-v${{ needs.build-x86.outputs.version }}
-            tag: socat-v${{ needs.build-x86.outputs.version }}
-            artifacts: "/tmp/releases/*/*"
-            token: ${{ secrets.STATIC_TOOLBOX }}
+            name: "Socat v${{ needs.build-x86.outputs.version }}"
+            tag_name: "socat-v${{ needs.build-x86.outputs.version }}"
+            prerelease: false
+            draft: false
+            generate_release_notes: false
+            token: "${{ secrets.GITHUB_TOKEN }}"
+            body: |
+              `Changelog`: _http://www.dest-unreach.org/socat/doc/CHANGES_
+            
+              `Install`: _https://github.com/Azathothas/static-toolbox/blob/master/README.md#socat_
+            files: |
+              /tmp/releases/*/*
