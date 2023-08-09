@@ -1,4 +1,4 @@
-name: Nmap
+name: ⚙️ Build Nmap 📦
 
 env:
   GITHUB_TOKEN: ${{ secrets.STATIC_TOOLBOX }}
@@ -173,5 +173,9 @@ jobs:
             draft: false
             generate_release_notes: false
             token: "${{ secrets.GITHUB_TOKEN }}"
+            body: |
+              `Changelog`: _https://nmap.org/changelog.html_
+            
+              `Install`: _https://github.com/Azathothas/static-toolbox/blob/master/README.md#nmap_
             files: |
               /tmp/releases/*/*
