@@ -1,7 +1,13 @@
-name: tcpdump
+name: ⚙️ Build TCPDump 📦
+#MAX_RUNTIME:
 on:
   workflow_dispatch
+  
+env:
+  GITHUB_TOKEN: ${{ secrets.STATIC_TOOLBOX }}
+  
 jobs:
+#------------------------------------------------------------------------------------#
     build-x86:
       name: Build tcpdump x86
       runs-on: ubuntu-latest
@@ -24,7 +30,7 @@ jobs:
           with:
               name: ${{ steps.build_tcpdump.outputs.PACKAGED_NAME }}
               path: ${{ steps.build_tcpdump.outputs.PACKAGED_NAME_PATH }}
-
+#------------------------------------------------------------------------------------#
     build-x86_64:
       name: Build tcpdump x86_64
       runs-on: ubuntu-latest
@@ -45,7 +51,7 @@ jobs:
           with:
               name: ${{ steps.build_tcpdump.outputs.PACKAGED_NAME }}
               path: ${{ steps.build_tcpdump.outputs.PACKAGED_NAME_PATH }}
-
+#------------------------------------------------------------------------------------#
     build-armhf:
       name: Build tcpdump ARMHF
       runs-on: ubuntu-latest
@@ -66,7 +72,7 @@ jobs:
           with:
               name: ${{ steps.build_tcpdump.outputs.PACKAGED_NAME }}
               path: ${{ steps.build_tcpdump.outputs.PACKAGED_NAME_PATH }}
-
+#------------------------------------------------------------------------------------#
     build-aarch64:
       name: Build tcpdump AARCH64
       runs-on: ubuntu-latest
@@ -87,7 +93,7 @@ jobs:
           with:
               name: ${{ steps.build_tcpdump.outputs.PACKAGED_NAME }}
               path: ${{ steps.build_tcpdump.outputs.PACKAGED_NAME_PATH }}
-
+#------------------------------------------------------------------------------------#
     create-release:
       name: Create tcpdump Release
       runs-on: ubuntu-latest
@@ -118,12 +124,21 @@ jobs:
               git push origin "tcpdump-v${{ needs.build-x86.outputs.version }}"
               echo "NEW_RELEASE=true" >> $GITHUB_OUTPUT
             fi
-
-        - name: Create Release
-          uses: ncipollo/release-action@v1
+#------------------------------------------------------------------------------------#
+        - name: Releaser
+          uses: softprops/action-gh-release@v0.1.15
           if: ${{ steps.tag_release.outputs.NEW_RELEASE == 'true' }}
           with:
-            name: tcpdump-v${{ needs.build-x86.outputs.version }}
-            tag: tcpdump-v${{ needs.build-x86.outputs.version }}
-            artifacts: "/tmp/releases/*/*"
-            token: ${{ secrets.GITHUB_TOKEN }}
+            name: "TCPDump v${{ needs.build-x86.outputs.version }}"
+            tag_name: "tcpdump-v${{ needs.build-x86.outputs.version }}"
+            prerelease: false
+            draft: false
+            generate_release_notes: false
+            token: "${{ secrets.GITHUB_TOKEN }}"
+            body: |
+              `Changelog`: _https://git.tcpdump.org/tcpdump/blob/HEAD:/CHANGES_
+            
+              `Install`: _https://github.com/Azathothas/static-toolbox/blob/master/README.md#tcpdump_
+            files: |
+              /tmp/releases/*/*
+#------------------------------------------------------------------------------------#            
