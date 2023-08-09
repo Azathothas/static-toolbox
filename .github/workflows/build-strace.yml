@@ -167,7 +167,7 @@ jobs:
 #------------------------------------------------------------------------------------#
         - name: Releaser
           uses: softprops/action-gh-release@v0.1.15
-          if: ${{ steps.tag_release.outputs.NEW_RELEASE == 'true' }}
+          #if: ${{ steps.tag_release.outputs.NEW_RELEASE == 'true' }}
           with:
             name: "Strace v${{ needs.build-x86.outputs.version }}"
             tag_name: "strace-v${{ needs.build-x86.outputs.version }}"
