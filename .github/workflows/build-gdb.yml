@@ -1,7 +1,9 @@
 name: ⚙️ Build GDB || GDBServer 📦
 #MAX_RUNTIME:  
 on:
-  workflow_dispatch
+  workflow_dispatch:
+  schedule:
+    - cron: "15 18 * * *" #  12:00 AM Nepal Time Midnight EveryDay
   
 env:
   GITHUB_TOKEN: ${{ secrets.STATIC_TOOLBOX }}
