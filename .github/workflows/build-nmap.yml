@@ -11,7 +11,7 @@ jobs:
         version: ${{ steps.package_nmap.outputs.PACKAGED_VERSION }}
       steps:
         - name: Checkout
-          uses: actions/checkout@v2
+          uses: actions/checkout@v3
 
         - name: Install dependencies
           run: sudo apk update && sudo apk add bash && sudo bash build/install_deps_alpine.sh
@@ -24,13 +24,13 @@ jobs:
           run: $GITHUB_WORKSPACE/package/targets/nmap/package.sh /output x86
 
         - name: Upload tarball
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v3
           with:
               name: ${{ steps.package_nmap.outputs.PACKAGED_TARBALL }}
               path: ${{ steps.package_nmap.outputs.PACKAGED_TARBALL_PATH }}
 
         - name: Upload zip
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v3
           with:
               name: ${{ steps.package_nmap.outputs.PACKAGED_ZIP }}
               path: ${{ steps.package_nmap.outputs.PACKAGED_ZIP_PATH }}
@@ -54,13 +54,13 @@ jobs:
           run: $GITHUB_WORKSPACE/package/targets/nmap/package.sh /output x86_64
 
         - name: Upload tarball
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v3
           with:
               name: ${{ steps.package_nmap.outputs.PACKAGED_TARBALL }}
               path: ${{ steps.package_nmap.outputs.PACKAGED_TARBALL_PATH }}
 
         - name: Upload zip
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v3
           with:
               name: ${{ steps.package_nmap.outputs.PACKAGED_ZIP }}
               path: ${{ steps.package_nmap.outputs.PACKAGED_ZIP_PATH }}
@@ -84,13 +84,13 @@ jobs:
           run: $GITHUB_WORKSPACE/package/targets/nmap/package.sh /output armhf
 
         - name: Upload tarball
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v3
           with:
               name: ${{ steps.package_nmap.outputs.PACKAGED_TARBALL }}
               path: ${{ steps.package_nmap.outputs.PACKAGED_TARBALL_PATH }}
 
         - name: Upload zip
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v3
           with:
               name: ${{ steps.package_nmap.outputs.PACKAGED_ZIP }}
               path: ${{ steps.package_nmap.outputs.PACKAGED_ZIP_PATH }}
@@ -114,13 +114,13 @@ jobs:
           run: $GITHUB_WORKSPACE/package/targets/nmap/package.sh /output aarch64
 
         - name: Upload tarball
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v3
           with:
               name: ${{ steps.package_nmap.outputs.PACKAGED_TARBALL }}
               path: ${{ steps.package_nmap.outputs.PACKAGED_TARBALL_PATH }}
 
         - name: Upload zip
-          uses: actions/upload-artifact@v2
+          uses: actions/upload-artifact@v3
           with:
               name: ${{ steps.package_nmap.outputs.PACKAGED_ZIP }}
               path: ${{ steps.package_nmap.outputs.PACKAGED_ZIP_PATH }}
@@ -131,7 +131,7 @@ jobs:
       needs: [build-x86, build-x86_64, build-armhf, build-aarch64]
       steps:
         - name: Checkout
-          uses: actions/checkout@v2
+          uses: actions/checkout@v3
 
         - name: Prepare Environment
           run: mkdir /tmp/releases
@@ -166,4 +166,4 @@ jobs:
             name: Nmap v${{ needs.build-x86.outputs.version }}
             tag: nmap-v${{ needs.build-x86.outputs.version }}
             artifacts: "/tmp/releases/*/*"
-            token: ${{ secrets.GITHUB_TOKEN }}
+            token: ${{ secrets.STATIC-TOOLBOX }}
