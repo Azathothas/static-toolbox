@@ -1,11 +1,13 @@
 name: ⚙️ Build Strace 📦
-
+#MAX_RUNTIME:  
+on:
+  workflow_dispatch
+  
 env:
   GITHUB_TOKEN: ${{ secrets.STATIC_TOOLBOX }}
   
-on:
-  workflow_dispatch
 jobs:
+#------------------------------------------------------------------------------------#
     build-x86:
       name: Build strace x86
       runs-on: ubuntu-latest
@@ -39,7 +41,7 @@ jobs:
           with:
               name: ${{ steps.build_strace.outputs.PACKAGED_NAME }}
               path: ${{ steps.build_strace.outputs.PACKAGED_NAME_PATH }}
-
+#------------------------------------------------------------------------------------#
     build-x86_64:
       name: Build strace x86_64
       runs-on: ubuntu-latest
@@ -63,7 +65,7 @@ jobs:
           with:
               name: ${{ steps.build_strace.outputs.PACKAGED_NAME }}
               path: ${{ steps.build_strace.outputs.PACKAGED_NAME_PATH }}
-
+#------------------------------------------------------------------------------------#
     build-armhf:
       name: Build strace ARMHF
       runs-on: ubuntu-latest
@@ -95,7 +97,7 @@ jobs:
           with:
               name: ${{ steps.build_strace.outputs.PACKAGED_NAME }}
               path: ${{ steps.build_strace.outputs.PACKAGED_NAME_PATH }}
-
+#------------------------------------------------------------------------------------#
     build-aarch64:
         name: Build strace AARCH64
         runs-on: ubuntu-latest
@@ -127,7 +129,7 @@ jobs:
             with:
                 name: ${{ steps.build_strace.outputs.PACKAGED_NAME }}
                 path: ${{ steps.build_strace.outputs.PACKAGED_NAME_PATH }}
-
+#------------------------------------------------------------------------------------#
     create-release:
       name: Create strace Release
       runs-on: ubuntu-latest
@@ -160,7 +162,7 @@ jobs:
               git push origin "strace-v${{ needs.build-x86.outputs.version }}"
               echo "NEW_RELEASE=true" >> $GITHUB_OUTPUT
             fi
-
+#------------------------------------------------------------------------------------#
         - name: Releaser
           uses: softprops/action-gh-release@v0.1.15
           if: ${{ steps.tag_release.outputs.NEW_RELEASE == 'true' }}
@@ -177,3 +179,4 @@ jobs:
               `Install`: _https://github.com/Azathothas/static-toolbox/blob/master/README.md#strace_
             files: |
               /tmp/releases/*/*
+#------------------------------------------------------------------------------------#
