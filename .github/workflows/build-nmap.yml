@@ -1,4 +1,8 @@
 name: Nmap
+
+env:
+  GITHUB_TOKEN: ${{ secrets.STATIC-TOOLBOX }}
+  
 on:
   workflow_dispatch
 jobs:
@@ -41,7 +45,7 @@ jobs:
       container: muslcc/x86_64:x86_64-linux-musl
       steps:
         - name: Checkout
-          uses: actions/checkout@v2
+          uses: actions/checkout@v3
 
         - name: Install dependencies
           run: sudo apk update && sudo apk add bash && sudo bash build/install_deps_alpine.sh
@@ -71,7 +75,7 @@ jobs:
       container: muslcc/x86_64:arm-linux-musleabihf
       steps:
         - name: Checkout
-          uses: actions/checkout@v2
+          uses: actions/checkout@v3
 
         - name: Install dependencies
           run: sudo apk update && sudo apk add bash && sudo bash build/install_deps_alpine.sh
@@ -101,7 +105,7 @@ jobs:
       container: muslcc/x86_64:aarch64-linux-musl
       steps:
         - name: Checkout
-          uses: actions/checkout@v2
+          uses: actions/checkout@v3
 
         - name: Install dependencies
           run: sudo apk update && sudo apk add bash && sudo bash build/install_deps_alpine.sh
@@ -137,7 +141,7 @@ jobs:
           run: mkdir /tmp/releases
 
         - name: Download Artifacts
-          uses: actions/download-artifact@v2
+          uses: actions/download-artifact@v3
           with:
             path: /tmp/releases
 
@@ -163,11 +167,11 @@ jobs:
           uses: softprops/action-gh-release@v0.1.15
           if: ${{ steps.tag_release.outputs.NEW_RELEASE == 'true' }}
           with:
-            name: Nmap v${{ needs.build-x86.outputs.version }}
-            tag_name: nmap-v${{ needs.build-x86.outputs.version }}
+            name: "Nmap v${{ needs.build-x86.outputs.version }}"
+            tag_name: "nmap-v${{ needs.build-x86.outputs.version }}"
             prerelease: false
             draft: false
             generate_release_notes: false
-            token: ${{ secrets.STATIC-TOOLBOX }} 
+            token: "${{ secrets.GITHUB_TOKEN }}"
             files: |
               /tmp/releases/*/*
