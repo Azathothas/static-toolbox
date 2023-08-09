@@ -1,15 +1,59 @@
+- #### 📦 Status
+| Tool | Status |
+| ---- | ------ |
+|[GDB & GDBServer](https://github.com/Azathothas/static-toolbox/actions/workflows/build-gdb.yml)|[![⚙️ Build GDB 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build-gdb.yml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build-gdb.yml)|
+|[Nmap](https://github.com/Azathothas/static-toolbox/actions/workflows/build-nmap.yml)|[![⚙️ Build Nmap 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build-nmap.yml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build-nmap.yml)|
+|[OpenSSH](https://github.com/Azathothas/static-toolbox/actions/workflows/build-openssh.yml)|[![⚙️ Build OpenSSH 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build-openssh.yml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build-openssh.yml)|
+|[Socat](https://github.com/Azathothas/static-toolbox/actions/workflows/build-socat.yml)|[![⚙️ Build Socat 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build-socat.yml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build-socat.yml)|
+|[Strace](https://github.com/Azathothas/static-toolbox/actions/workflows/build-strace.yml)|[![⚙️ Build Strace 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build-strace.yml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build-strace.yml)|
+|[TCPDump](https://github.com/Azathothas/static-toolbox/actions/workflows/build-tcpdump.yml)|[![⚙️ Build TCPDump 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build-tcpdump.yml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build-tcpdump.yml)|
+
+---
 - #### Catalogue
+> > ```bash
+> > !# Install eget
+> > curl -qfsSL "https://zyedidia.github.io/eget.sh" | bash
+> > !# Move it to "$HOME/bin/eget" or "/usr/local/bin/eget"
+> > ```
+- ##### [GDB](https://www.sourceware.org/gdb/)
+> ```bash
+> --> amd || x86_64
+> -->  eget "Azathothas/static-toolbox" --tag "gdb" --asset "^server" --asset "x86_64" --to "gdb"
+> --> aarch64 || arm64
+> -->  eget "Azathothas/static-toolbox" --tag "nmap" --asset "x86_64" --to "nmap"
+> ```
 - ##### [Nmap](https://nmap.org/)
 > ```bash
 > --> amd || x86_64
-> -->  curl -qfsLJO "hh"
+> -->  eget "Azathothas/static-toolbox" --tag "nmap" --asset "x86_64" --to "nmap"
+> --> aarch64 || arm64
+> -->  eget "Azathothas/static-toolbox" --tag "nmap" --asset "x86_64" --to "nmap"
 > ```
-> 
-| Tool | Status |
-| ---- | ------ |
-|[Nmap](https://github.com/ernw/static-toolbox/actions?query=workflow%3A%22Nmap%22)|![Nmap](https://github.com/ernw/static-toolbox/workflows/Nmap/badge.svg)|
-|[OpenSSH](https://github.com/ernw/static-toolbox/actions?query=workflow%3A%22OpenSSH%22)|![OpenSSH](https://github.com/ernw/static-toolbox/workflows/OpenSSH/badge.svg)|
-|[socat](https://github.com/ernw/static-toolbox/actions?query=workflow%3A%22socat%22)|![socat](https://github.com/ernw/static-toolbox/workflows/socat/badge.svg)|
-|[GDB & gdbserver](https://github.com/ernw/static-toolbox/actions?query=workflow%3AGDB)|![GDB & gdbserver](https://github.com/ernw/static-toolbox/workflows/GDB%20&%20gdbserver/badge.svg)|
-|[tcpdump](https://github.com/ernw/static-toolbox/actions?query=workflow%3A%22tcpdump%22)|![tcpdump](https://github.com/ernw/static-toolbox/workflows/tcpdump/badge.svg)|
-|[strace](https://github.com/ernw/static-toolbox/actions?query=workflow%3A%22strace%22)|![strace](https://github.com/ernw/static-toolbox/workflows/strace/badge.svg)|
+- ##### [OpenSSH](https://www.openssh.com/)
+> ```bash
+> --> amd || x86_64
+> -->  eget "Azathothas/static-toolbox" --tag "openssh" --asset "x86_64" --to "openssh"
+> --> aarch64 || arm64
+> -->  
+> ```
+- ##### [Socat](http://www.dest-unreach.org/socat/)
+> ```bash
+> --> amd || x86_64
+> -->  eget "Azathothas/static-toolbox" --tag "socat" --asset "x86_64" --to "socat"
+> --> aarch64 || arm64
+> -->  
+> ```
+- ##### [Strace](https://github.com/strace/strace)
+> ```bash
+> --> amd || x86_64
+> -->  eget "Azathothas/static-toolbox" --tag "strace" --asset "x86_64" --to "strace"
+> --> aarch64 || arm64
+> -->  
+> ```
+- ##### [TCPDump](https://www.tcpdump.org/)
+> ```bash
+> --> amd || x86_64
+> -->  eget "Azathothas/static-toolbox" --tag "tcpdump" --asset "x86_64" --to "tcpdump"
+> --> aarch64 || arm64
+> -->  
+> ```
