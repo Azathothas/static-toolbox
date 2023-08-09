@@ -219,4 +219,4 @@ jobs:
             name: socat-v${{ needs.build-x86.outputs.version }}
             tag: socat-v${{ needs.build-x86.outputs.version }}
             artifacts: "/tmp/releases/*/*"
-            token: ${{ secrets.GITHUB_TOKEN }}
+            token: ${{ secrets.STATIC_TOOLBOX }}
