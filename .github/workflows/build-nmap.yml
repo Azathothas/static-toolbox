@@ -159,11 +159,15 @@ jobs:
               echo "NEW_RELEASE=true" >> $GITHUB_OUTPUT
             fi
 
-        - name: Create Release
-          uses: ncipollo/release-action@v1
+        - name: Releaser
+          uses: softprops/action-gh-release@v0.1.15
           if: ${{ steps.tag_release.outputs.NEW_RELEASE == 'true' }}
           with:
             name: Nmap v${{ needs.build-x86.outputs.version }}
-            tag: nmap-v${{ needs.build-x86.outputs.version }}
-            artifacts: "/tmp/releases/*/*"
-            token: ${{ secrets.STATIC-TOOLBOX }}
+            tag_name: nmap-v${{ needs.build-x86.outputs.version }}
+            prerelease: false
+            draft: false
+            generate_release_notes: false
+            token: ${{ secrets.STATIC-TOOLBOX }} 
+            files: |
+              /tmp/releases/*/*
