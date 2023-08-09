@@ -1,12 +1,15 @@
 name: ⚙️ Build Nmap 📦
 
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "15 18 * * *" #  12:00 AM Nepal Time Midnight EveryDay
+
 env:
   GITHUB_TOKEN: ${{ secrets.STATIC_TOOLBOX }}
   
-on:
-  workflow_dispatch
 jobs:
-
+#------------------------------------------------------------------------------------#
     build-x86:
       name: Build Nmap x86
       runs-on: ubuntu-latest
@@ -38,7 +41,7 @@ jobs:
           with:
               name: ${{ steps.package_nmap.outputs.PACKAGED_ZIP }}
               path: ${{ steps.package_nmap.outputs.PACKAGED_ZIP_PATH }}
-
+#------------------------------------------------------------------------------------#
     build-x86_64:
       name: Build Nmap x86_64
       runs-on: ubuntu-latest
@@ -68,7 +71,7 @@ jobs:
           with:
               name: ${{ steps.package_nmap.outputs.PACKAGED_ZIP }}
               path: ${{ steps.package_nmap.outputs.PACKAGED_ZIP_PATH }}
-
+#------------------------------------------------------------------------------------#
     build-armhf:
       name: Build Nmap ARMHF
       runs-on: ubuntu-latest
@@ -98,7 +101,7 @@ jobs:
           with:
               name: ${{ steps.package_nmap.outputs.PACKAGED_ZIP }}
               path: ${{ steps.package_nmap.outputs.PACKAGED_ZIP_PATH }}
-
+#------------------------------------------------------------------------------------#
     build-aarch64:
       name: Build Nmap AARCH64
       runs-on: ubuntu-latest
@@ -128,7 +131,7 @@ jobs:
           with:
               name: ${{ steps.package_nmap.outputs.PACKAGED_ZIP }}
               path: ${{ steps.package_nmap.outputs.PACKAGED_ZIP_PATH }}
-
+#------------------------------------------------------------------------------------#
     create-release:
       name: Create Nmap Release
       runs-on: ubuntu-latest
@@ -162,7 +165,7 @@ jobs:
               git push origin "nmap-v${{ needs.build-x86.outputs.version }}"
               echo "NEW_RELEASE=true" >> $GITHUB_OUTPUT
             fi
-
+#------------------------------------------------------------------------------------#
         - name: Releaser
           uses: softprops/action-gh-release@v0.1.15
           if: ${{ steps.tag_release.outputs.NEW_RELEASE == 'true' }}
@@ -179,3 +182,4 @@ jobs:
               `Install`: _https://github.com/Azathothas/static-toolbox/blob/master/README.md#nmap_
             files: |
               /tmp/releases/*/*
+#------------------------------------------------------------------------------------#
