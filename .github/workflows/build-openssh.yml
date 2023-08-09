@@ -1,7 +1,13 @@
-name: OpenSSH
+name: ⚙️ Build OpenSSH 📦
+#MAX_RUNTIME:  
 on:
   workflow_dispatch
+  
+env:
+  GITHUB_TOKEN: ${{ secrets.STATIC_TOOLBOX }}
+  
 jobs:
+#------------------------------------------------------------------------------------#
     build-x86:
       name: Build OpenSSH x86
       runs-on: ubuntu-latest
@@ -24,7 +30,7 @@ jobs:
           with:
               name: ${{ steps.build_openssh.outputs.PACKAGED_NAME }}
               path: ${{ steps.build_openssh.outputs.PACKAGED_NAME_PATH }}
-
+#------------------------------------------------------------------------------------#
     build-x86_64:
       name: Build OpenSSH x86_64
       runs-on: ubuntu-latest
@@ -45,7 +51,7 @@ jobs:
           with:
               name: ${{ steps.build_openssh.outputs.PACKAGED_NAME }}
               path: ${{ steps.build_openssh.outputs.PACKAGED_NAME_PATH }}
-
+#------------------------------------------------------------------------------------#
     build-armhf:
       name: Build OpenSSH ARMHF
       runs-on: ubuntu-latest
@@ -66,7 +72,7 @@ jobs:
           with:
               name: ${{ steps.build_openssh.outputs.PACKAGED_NAME }}
               path: ${{ steps.build_openssh.outputs.PACKAGED_NAME_PATH }}
-
+#------------------------------------------------------------------------------------#
     build-aarch64:
       name: Build OpenSSH AARCH64
       runs-on: ubuntu-latest
@@ -87,7 +93,7 @@ jobs:
           with:
               name: ${{ steps.build_openssh.outputs.PACKAGED_NAME }}
               path: ${{ steps.build_openssh.outputs.PACKAGED_NAME_PATH }}
-
+#------------------------------------------------------------------------------------#
     create-release:
       name: Create OpenSSH Release
       runs-on: ubuntu-latest
@@ -119,12 +125,21 @@ jobs:
               git push origin "openssh-v${{ needs.build-x86.outputs.version }}"
               echo "NEW_RELEASE=true" >> $GITHUB_OUTPUT
             fi
-
-        - name: Create Release
-          uses: ncipollo/release-action@v1
+#------------------------------------------------------------------------------------#
+        - name: Releaser
+          uses: softprops/action-gh-release@v0.1.15
           if: ${{ steps.tag_release.outputs.NEW_RELEASE == 'true' }}
           with:
-            name: openssh-v${{ needs.build-x86.outputs.version }}
-            tag: openssh-v${{ needs.build-x86.outputs.version }}
-            artifacts: "/tmp/releases/*/*"
-            token: ${{ secrets.GITHUB_TOKEN }}
+            name: "OpenSSH v${{ needs.build-x86.outputs.version }}"
+            tag_name: "openssh-v${{ needs.build-x86.outputs.version }}"
+            prerelease: false
+            draft: false
+            generate_release_notes: false
+            token: "${{ secrets.GITHUB_TOKEN }}"
+            body: |
+              `Changelog`: _https://www.openssh.com/releasenotes.html_
+            
+              `Install`: _https://github.com/Azathothas/static-toolbox/blob/master/README.md#openssh_
+            files: |
+              /tmp/releases/*/*
+#------------------------------------------------------------------------------------#            
