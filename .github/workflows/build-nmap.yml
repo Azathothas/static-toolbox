@@ -168,7 +168,6 @@ jobs:
 #------------------------------------------------------------------------------------#
         - name: Releaser
           uses: softprops/action-gh-release@v0.1.15
-          if: ${{ steps.tag_release.outputs.NEW_RELEASE == 'true' }}
           with:
             name: "Nmap v${{ needs.build-x86.outputs.version }}"
             tag_name: "nmap-v${{ needs.build-x86.outputs.version }}"
