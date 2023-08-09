@@ -7,6 +7,7 @@ apk add \
     make \
     cmake \
     flex \
+    jq \
     bison \
     automake \
     autoconf \
