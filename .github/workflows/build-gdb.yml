@@ -161,20 +161,20 @@ jobs:
             echo ::set-output name=NEW_RELEASE::"true"
           fi
 #------------------------------------------------------------------------------------#
-        - name: Releaser
-          uses: softprops/action-gh-release@v0.1.15
-          if: ${{ steps.tag_release.outputs.NEW_RELEASE == 'true' }}
-          with:
-            name: "GDB v${{ needs.build-x86.outputs.version }}"
-            tag_name: "gdb-v${{ needs.build-x86.outputs.version }}"
-            prerelease: false
-            draft: false
-            generate_release_notes: false
-            token: "${{ secrets.GITHUB_TOKEN }}"
-            body: |
-              `Changelog`: _https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/NEWS;hb=HEAD_
-            
-              `Install`: _https://github.com/Azathothas/static-toolbox/blob/master/README.md#gdb_
-            files: |
-              /tmp/releases/*/*
+      - name: Releaser
+        uses: softprops/action-gh-release@v0.1.15
+        if: ${{ steps.tag_release.outputs.NEW_RELEASE == 'true' }}
+        with:
+          name: "GDB v${{ needs.build-x86.outputs.version }}"
+          tag_name: "gdb-v${{ needs.build-x86.outputs.version }}"
+          prerelease: false
+          draft: false
+          generate_release_notes: false
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          body: |
+            `Changelog`: _https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/NEWS;hb=HEAD_
+          
+            `Install`: _https://github.com/Azathothas/static-toolbox/blob/master/README.md#gdb_
+          files: |
+            /tmp/releases/*/*
 #------------------------------------------------------------------------------------#          
