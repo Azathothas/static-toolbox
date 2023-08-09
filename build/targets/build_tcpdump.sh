@@ -18,7 +18,7 @@ build_tcpdump() {
     fetch "https://github.com/the-tcpdump-group/tcpdump.git" "${BUILD_DIRECTORY}/tcpdump" git
     cd "${BUILD_DIRECTORY}/tcpdump"
     git clean -fdx
-    git checkout tcpdump-4.9.3
+    git checkout "$(git tag --sort=-creatordate | head -n 1)"
     export LIBPCAP_PATH="${BUILD_DIRECTORY}/libpcap"
     CFLAGS="${GCC_OPTS} -I${LIBPCAP_PATH} -L${LIBPCAP_PATH}" \
         CXXFLAGS="${GXX_OPTS}" \
