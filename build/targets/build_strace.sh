@@ -10,7 +10,17 @@ fi
 source $GITHUB_WORKSPACE/build/lib.sh
 init_lib "$1"
 
-VERSION="v6.3"
+#VERSION="v6.3"
+# Get latest Version
+VERSION=$(curl -qfsSL "https://api.github.com/repos/strace/strace/releases/latest" | jq -r '.tag_name')
+export VERSION="$VERSION"
+# If we get rate-limited, git clone the repo
+if [ -z "$VERSION" ]; then
+  pushd $(mktemp -d) && git clone https://github.com/strace/strace && cd strace
+  VERSION=$(git tag --sort=-creatordate | head -n 1)
+  export VERSION="$VERSION"
+  popd
+fi
 
 build_strace() {
     fetch "https://github.com/strace/strace" "${BUILD_DIRECTORY}/strace" git
