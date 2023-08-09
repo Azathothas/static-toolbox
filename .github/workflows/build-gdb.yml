@@ -1,8 +1,13 @@
-name: GDB & gdbserver
+name: ⚙️ Build GDB || GDBServer 📦
+#MAX_RUNTIME:  
 on:
   workflow_dispatch
+  
+env:
+  GITHUB_TOKEN: ${{ secrets.STATIC_TOOLBOX }}
+  
 jobs:
-
+#------------------------------------------------------------------------------------#
   build-x86:
     name: Build GDB & gdbserver x86
     runs-on: ubuntu-latest
@@ -33,7 +38,8 @@ jobs:
         with:
             name: ${{ steps.build_gdb.outputs.PACKAGED_NAME }}
             path: ${{ steps.build_gdb.outputs.PACKAGED_NAME_PATH }}
-
+            
+#------------------------------------------------------------------------------------#
   build-x86_64:
     name: Build GDB & gdbserver x86_64
     runs-on: ubuntu-latest
@@ -58,8 +64,8 @@ jobs:
         with:
             name: ${{ steps.build_gdb.outputs.PACKAGED_NAME }}
             path: ${{ steps.build_gdb.outputs.PACKAGED_NAME_PATH }}
-
-
+            
+#------------------------------------------------------------------------------------#
   build-armhf:
     name: Build GDB & gdbserver ARMHF
     runs-on: ubuntu-latest
@@ -89,7 +95,7 @@ jobs:
             name: ${{ steps.build_gdb.outputs.PACKAGED_NAME }}
             path: ${{ steps.build_gdb.outputs.PACKAGED_NAME_PATH }}
 
-
+#------------------------------------------------------------------------------------#
   build-aarch64:
     name: Build GDB & gdbserver AARCH64
     runs-on: ubuntu-latest
@@ -122,7 +128,7 @@ jobs:
         with:
             name: ${{ steps.build_gdb.outputs.PACKAGED_NAME }}
             path: ${{ steps.build_gdb.outputs.PACKAGED_NAME_PATH }}
-
+#------------------------------------------------------------------------------------#
   create-release:
     name: Create GDB & gdbserver Release
     runs-on: ubuntu-latest
@@ -154,12 +160,21 @@ jobs:
             git push origin "gdb-v${{ needs.build-x86.outputs.version }}"
             echo ::set-output name=NEW_RELEASE::"true"
           fi
-
-      - name: Create Release
-        uses: ncipollo/release-action@v1
-        if: ${{ steps.tag_release.outputs.NEW_RELEASE == 'true' }}
-        with:
-          name: gdb-v${{ needs.build-x86.outputs.version }}
-          tag: gdb-v${{ needs.build-x86.outputs.version }}
-          artifacts: "/tmp/releases/*/*"
-          token: ${{ secrets.GITHUB_TOKEN }}
+#------------------------------------------------------------------------------------#
+        - name: Releaser
+          uses: softprops/action-gh-release@v0.1.15
+          if: ${{ steps.tag_release.outputs.NEW_RELEASE == 'true' }}
+          with:
+            name: "GDB v${{ needs.build-x86.outputs.version }}"
+            tag_name: "gdb-v${{ needs.build-x86.outputs.version }}"
+            prerelease: false
+            draft: false
+            generate_release_notes: false
+            token: "${{ secrets.GITHUB_TOKEN }}"
+            body: |
+              `Changelog`: _https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;a=blob;f=gdb/NEWS;hb=HEAD_
+            
+              `Install`: _https://github.com/Azathothas/static-toolbox/blob/master/README.md#gdb_
+            files: |
+              /tmp/releases/*/*
+#------------------------------------------------------------------------------------#          
