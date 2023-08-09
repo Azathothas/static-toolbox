@@ -165,14 +165,14 @@ jobs:
           uses: softprops/action-gh-release@v0.1.15
           if: ${{ steps.tag_release.outputs.NEW_RELEASE == 'true' }}
           with:
-            name: "strace-${{ needs.build-x86.outputs.version }}"
-            tag_name: "strace-${{ needs.build-x86.outputs.version }}"
+            name: "Strace v${{ needs.build-x86.outputs.version }}"
+            tag_name: "strace-v${{ needs.build-x86.outputs.version }}"
             prerelease: false
             draft: false
             generate_release_notes: false
             token: "${{ secrets.GITHUB_TOKEN }}"
             body: |
-              `Changelog`: _https://github.com/strace/strace/releases/tag/${{ needs.build-x86.outputs.version }}_
+              `Changelog`: _https://github.com/strace/strace/releases/tag/v${{ needs.build-x86.outputs.version }}_
             
               `Install`: _https://github.com/Azathothas/static-toolbox/blob/master/README.md#strace_
             files: |
