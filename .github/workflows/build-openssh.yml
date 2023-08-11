@@ -156,9 +156,66 @@ jobs:
           with:
             path: /tmp/releases
 
-        - name: List Artifacts
-          run: ls -laR /tmp/releases
-
+        - name: List Artifacts && Unpack
+          run: |
+            ls -laR /tmp/releases && cd /tmp/releases
+            #aarch64_arm64
+            find . -type f -name '*aarch64*' -exec tar -xzvf {} \;
+            find ./bin -type f -name '*sshd_config*' -exec mv {} ./sshd_config_aarch64_arm64_Linux \;
+            find ./bin -type f -name '*sshd*' ! -name '*sshd_config*' -exec mv {} ./sshd_aarch64_arm64_Linux \;
+            find ./bin -type f -name '*sftp-server*' -exec mv {} ./sftp_server_aarch64_arm64_Linux \;
+            find . -empty -delete 
+            #amd_x86_64
+            find . -type f -name '*x86-64*' -exec tar -xzvf {} \;
+            find ./bin -type f -name '*sshd_config*' -exec mv {} ./sshd_config_amd_x86_64_Linux \;
+            find ./bin -type f -name '*sshd*' ! -name '*sshd_config*' -exec mv {} ./sshd_amd_x86_64_Linux \;
+            find ./bin -type f -name '*sftp-server*' -exec mv {} ./sftp_server_amd_x86_64_Linux \;
+            find . -empty -delete 
+            #armv7_eabihf
+            find . -type f -name '*armv7-eabihf*' -exec tar -xzvf {} \;
+            find ./bin -type f -name '*sshd_config*' -exec mv {} ./sshd_config_armv7_eabihf_Linux \;
+            find ./bin -type f -name '*sshd*' ! -name '*sshd_config*' -exec mv {} ./sshd_armv7_eabihf_Linux \;
+            find ./bin -type f -name '*sftp-server*' -exec mv {} ./sftp_server_armv7_eabihf_Linux \;
+            find . -empty -delete
+            
+        - name: Create Body for Release
+          run: |
+            set +e
+            cd /tmp/releases
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            echo '---' >> /tmp/RELEASE_NOTE.md
+            echo '```console' >> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            echo "Changelog: 'https://www.openssh.com/releasenotes.html'" >> /tmp/RELEASE_NOTE.md
+            echo "Install: 'https://github.com/Azathothas/static-toolbox/blob/master/README.md#openssh'" >> /tmp/RELEASE_NOTE.md       
+            echo -e "" >> /tmp/RELEASE_NOTE.md            
+            echo -e "--> METADATA" >> /tmp/RELEASE_NOTE.md
+            /bin/bash -c 'PS4="$ "; file ./* | grep -v '.txt' '&>> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            echo -e "--> SHA256SUM" >> /tmp/RELEASE_NOTE.md
+            /bin/bash -c 'PS4="$ ";sha256sum ./* | grep -v '.txt' ' &>> /tmp/RELEASE_NOTE.md  
+            echo -e '```\n' >> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            echo '---' >> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md         
+            echo '- #### Version' >> /tmp/RELEASE_NOTE.md
+            echo '```console' >> /tmp/RELEASE_NOTE.md
+            /bin/bash -c 'PS4="$ "; ./sshd_amd_x86_64_Linux --help' &>> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            /bin/bash -c 'PS4="$ "; ./sftp_server_amd_x86_64_Linux -help' &>> /tmp/RELEASE_NOTE.md
+            echo '```' >> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            echo '---' >> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            echo '- #### Sizes' >> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            echo '```console' >> /tmp/RELEASE_NOTE.md
+            /bin/bash -c 'PS4="$ "; ls -lh ./* | grep -v '.txt' | awk "{print \$5, \$9}" | column -t' &>> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            echo '```' >> /tmp/RELEASE_NOTE.md         
+            echo -e "" >> /tmp/RELEASE_NOTE.md                  
+          continue-on-error: true
+        
         - name: Releaser
           uses: softprops/action-gh-release@v0.1.15
           with:
@@ -168,10 +225,7 @@ jobs:
             draft: false
             generate_release_notes: false
             token: "${{ secrets.GITHUB_TOKEN }}"
-            body: |
-              `Changelog`: _https://www.openssh.com/releasenotes.html_
-            
-              `Install`: _https://github.com/Azathothas/static-toolbox/blob/master/README.md#openssh_
+            body_path: "/tmp/RELEASE_NOTE.md"
             files: |
               /tmp/releases/*/*
 #------------------------------------------------------------------------------------#        
