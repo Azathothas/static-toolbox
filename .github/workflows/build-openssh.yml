@@ -169,7 +169,7 @@ jobs:
           uses: softprops/action-gh-release@v0.1.15
           with:
             name: "OpenSSH ${{ env.OPENSSH_VERSION }}"
-            tag_name: "openssh-${{ needs.build-x86.outputs.version }}"
+            tag_name: "openssh-${{ env.OPENSSH_VERSION }}"
             prerelease: false
             draft: false
             generate_release_notes: false
