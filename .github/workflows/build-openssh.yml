@@ -60,11 +60,11 @@ jobs:
       steps:
         - name: Checkout Repo
           uses: actions/checkout@v3
-
-      - name: Install CoreUtils & Deps
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install automake b3sum build-essential ca-certificates ccache lzip jq make musl musl-dev musl-tools p7zip-full wget -y
+          
+        - name: Install CoreUtils & Deps
+          run: |
+            sudo apt-get update -y
+            sudo apt-get install automake b3sum build-essential ca-certificates ccache lzip jq make musl musl-dev musl-tools p7zip-full wget -y
 
         - name: Build OpenSSH
           run: |
