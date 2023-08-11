@@ -68,6 +68,7 @@ jobs:
 
         - name: Build OpenSSH
           run: |
+            set -x ; set +e
             # Get $VERSION
             export OPENSSH_VERSION="$curl -qfsSL https://api.github.com/repos/openssh/openssh-portable/tags | jq -r '.[0].name')"
             echo "OPENSSH_VERSION=$OPENSSH_VERSION" >> $GITHUB_ENV
