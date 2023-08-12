@@ -1,5 +1,6 @@
 name: ⚙️ Build Git Binaries 📦
-#MAX_RUNTIME:  
+#MAX_RUNTIME: 10 Minutes
+#REF: https://github.com/darkvertex/static-git/blob/main/.github/workflows/build.yml
 on:
   workflow_dispatch:
   schedule:
