@@ -30,8 +30,10 @@ jobs:
             cd $(mktemp -d) && git clone https://github.com/git/git
             cd "./git" 
             # Export Version
-            export VERSION=$(git tag --sort=-creatordate | head -n 1 | sed 's/-.*$//')
+            export VERSION=$(git tag --sort=-creatordate | head -n 1)
             echo "VERSION=$VERSION" >> $GITHUB_ENV
+            export RELEASE_VERSION=$(git tag --sort=-creatordate | head -n 1 | sed 's/^v//; s/-.*$//')
+            echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
             # Configure
             make configure && sed -i 's/qversion/-version/g' configure
             # Prefix
@@ -62,7 +64,7 @@ jobs:
             echo '---' >> /tmp/RELEASE_NOTE.md
             echo '```console' >> /tmp/RELEASE_NOTE.md
             echo -e "" >> /tmp/RELEASE_NOTE.md
-            echo "Changelog: 'https://github.com/git/git/blob/master/Documentation/RelNotes/$VERSION.txt'" >> /tmp/RELEASE_NOTE.md     
+            echo "Changelog: 'https://github.com/git/git/blob/master/Documentation/RelNotes/$RELEASE_VERSION.txt'" >> /tmp/RELEASE_NOTE.md     
             echo -e "" >> /tmp/RELEASE_NOTE.md            
             echo -e "--> METADATA" >> /tmp/RELEASE_NOTE.md
             /bin/bash -c 'PS4="$ "; file * | grep -v '.txt' '&>> /tmp/RELEASE_NOTE.md
