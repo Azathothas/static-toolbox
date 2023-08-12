@@ -2,6 +2,7 @@
 | Tool | Status |
 | ---- | ------ |
 |[GDB & GDBServer](https://github.com/Azathothas/static-toolbox/actions/workflows/build-gdb.yml)|[![⚙️ Build GDB 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build-gdb.yml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build-gdb.yml)|
+|[Git](https://github.com/git/git)|[![⚙️ Build Git Binaries 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build_git.yaml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build_git.yaml)
 |[Nmap](https://github.com/Azathothas/static-toolbox/actions/workflows/build-nmap.yml)|[![⚙️ Build Nmap 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build-nmap.yml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build-nmap.yml)|
 |[OpenSSH](https://github.com/Azathothas/static-toolbox/actions/workflows/build-openssh.yml)|[![⚙️ Build OpenSSH 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build-openssh.yml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build-openssh.yml)|
 |[Socat](https://github.com/Azathothas/static-toolbox/actions/workflows/build-socat.yml)|[![⚙️ Build Socat 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build-socat.yml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build-socat.yml)|
