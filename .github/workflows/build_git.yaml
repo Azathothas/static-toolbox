@@ -1,0 +1,106 @@
+name: ⚙️ Build Git Binaries 📦
+#MAX_RUNTIME:  
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "15 18 * * *" #  12:00 AM Nepal Time Midnight EveryDay
+  
+env:
+  GITHUB_TOKEN: ${{ secrets.STATIC_TOOLBOX }}
+
+jobs:
+#------------------------------------------------------------------------------------#
+    build-x86-64:
+      name: Build Git (ARCH=x86-64)
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout Repo
+          uses: actions/checkout@v3
+
+        - name: Install CoreUtils & Deps
+          run: |
+            sudo apt-get update -y
+            sudo apt-get install automake b3sum build-essential ca-certificates ccache lzip jq make musl musl-dev musl-tools p7zip-full wget -y
+            sudo apt-get install curl autoconf bison devscripts flex gcc make bash cmake gettext g++ libtool musl-dev tcl tcl-dev tk -y
+
+        - name: Build Git
+          run: |
+            set -x ; set +e
+            # Git Clone Repo
+            cd $(mktemp -d) && git clone https://github.com/git/git
+            cd "./git" 
+            # Export Version
+            export VERSION=$(git tag --sort=-creatordate | head -n 1 | sed 's/-.*$//')
+            echo "VERSION=$VERSION" >> $GITHUB_ENV
+            # Configure
+            make configure && sed -i 's/qversion/-version/g' configure
+            # Prefix
+            ./configure prefix="$(pwd)/Release" LDFLAGS="--static" CFLAGS="${CFLAGS} -static" && cat config.log
+            # make (Puts Binaries in ./Release/bin)
+            make -j$(nproc) && make install
+            # Rename ./Release/bin & move them
+            mv ./Release/bin ./git_binaries
+            # Strip the binaries
+            find ./git_binaries -type f -exec strip {} \;
+            sha256sum ./git_binaries/*
+            pushd "./git_binaries" 
+            find . -type f -exec sh -c 'new_name=$(echo "{}" | sed "s/-/_/g; s/$/_amd_x86_64_Linux/"); mv "{}" "./$new_name"' \;
+            sha256sum *
+            popd
+            # Put Everything in a single Tar
+            tar -czvf git_binaries.tar.gz ./git_binaries*
+            # Prepare for Release
+            mkdir -p /tmp/releases
+            mv ./git_binaries/* /tmp/releases
+            mv ./git_binaries.tar.gz /tmp/releases
+
+        - name: Create Body for Release
+          run: |
+            set +e
+            cd /tmp/releases
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            echo '---' >> /tmp/RELEASE_NOTE.md
+            echo '```console' >> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            echo "Changelog: 'https://github.com/git/git/blob/master/Documentation/RelNotes/$VERSION.txt'" >> /tmp/RELEASE_NOTE.md     
+            echo -e "" >> /tmp/RELEASE_NOTE.md            
+            echo -e "--> METADATA" >> /tmp/RELEASE_NOTE.md
+            /bin/bash -c 'PS4="$ "; file * | grep -v '.txt' '&>> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            echo -e "--> SHA256SUM" >> /tmp/RELEASE_NOTE.md
+            /bin/bash -c 'PS4="$ ";sha256sum * | grep -v '.txt' ' &>> /tmp/RELEASE_NOTE.md  
+            echo -e '```\n' >> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            echo '---' >> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md         
+            echo '- #### Version' >> /tmp/RELEASE_NOTE.md
+            echo '```console' >> /tmp/RELEASE_NOTE.md
+            /bin/bash -c 'PS4="$ "; ./git_amd_x86_64_Linux --version' &>> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            /bin/bash -c 'PS4="$ "; ./git_amd_x86_64_Linux --help' &>> /tmp/RELEASE_NOTE.md
+            echo '```' >> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            echo '---' >> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            echo '- #### Sizes' >> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            echo '```console' >> /tmp/RELEASE_NOTE.md
+            /bin/bash -c 'PS4="$ "; ls -lh ./* | grep -v '.txt' | awk "{print \$5, \$9}" | column -t' &>> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            echo '```' >> /tmp/RELEASE_NOTE.md         
+            echo -e "" >> /tmp/RELEASE_NOTE.md                  
+          continue-on-error: true
+
+        - name: Releaser
+          uses: softprops/action-gh-release@v0.1.15
+          with:
+            name: "Git ${{ env.VERSION }}"
+            tag_name: "git-${{ env.VERSION }}"
+            prerelease: false
+            draft: false
+            generate_release_notes: false
+            token: "${{ secrets.GITHUB_TOKEN }}"
+            body_path: "/tmp/RELEASE_NOTE.md"
+            files: |
+              /tmp/releases/*
+#------------------------------------------------------------------------------------#
