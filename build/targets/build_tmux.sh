@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Usage: bash <(curl -qfL https://raw.githubusercontent.com/Azathothas/static-toolbox/master/build/targets/build_tmux.sh)
+
 export CC=cc
 export REALCC=${CC}
 export CPPFLAGS="-P"
@@ -75,7 +77,8 @@ MUSL_URL="https://www.musl-libc.org/releases"
 
 #https://invisible-island.net/ncurses/ncurses.html
 NCURSES_ARCHIVE="ncurses.tar.gz"
-NCURSES_URL="https://invisible-island.net/datafiles/release"
+NCURSES_URL="https://invisible-island.net/archives/ncurses/current"
+#NCURSES_URL="https://invisible-island.net/datafiles/release"
 
 LIBEVENT_ARCHIVE="libevent-${LIBEVENT_VERSION}-stable.tar.gz"
 LIBEVENT_URL="https://github.com/libevent/libevent/releases/download/release-${LIBEVENT_VERSION}-stable"
@@ -335,8 +338,11 @@ fi
 printf "Extracting...."
 tar xzf ${NCURSES_ARCHIVE}
 checkResult $?
+printf "Fixing Filename...."
+mv $(find . -maxdepth 1 -type d -name 'ncurses*' ! -name '*.gz') ncurses-${NCURSES_VERSION}
 
 cd ncurses-${NCURSES_VERSION} || exit 1
+#cd $(find . -maxdepth 1 -type d -name 'ncurses*' ! -name '*.gz') || exit 1
 
 printf "Configuring..."
 ./configure \
