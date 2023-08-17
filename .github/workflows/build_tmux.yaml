@@ -77,24 +77,9 @@ jobs:
           with:
             path: /tmp/releases
 
-        - name: Setup Tailscale
-          run: |
-            #Download & Chmod
-            sudo curl -qfSL "https://raw.githubusercontent.com/Azathothas/Static-Binaries/main/tailscale/tailscale_amd_x86_64_Linux" -o "/usr/local/bin/tailscale"
-            sudo curl -qfSL "https://raw.githubusercontent.com/Azathothas/Static-Binaries/main/tailscale/tailscaled_amd_x86_64_Linux" -o "/usr/local/bin/tailscaled"
-            sudo chmod +xwr /usr/local/bin/tailscale*
-            #Enable Userspace Networking
-            sudo tailscaled --tun=userspace-networking --socks5-server=localhost:9025 --outbound-http-proxy-listen=localhost:9025 >/dev/null 2>&1 &
-            #Authenticate with Ephemeral Key: https://login.tailscale.com/admin/settings/keys
-            sudo tailscale up --ssh --hostname="ssss" --authkey="tskey-auth-ksYVhg1CNTRL-A5QDDdH66vU2pVMcgBy2wUYwzgL4Sv2F" 
-  
-        - name: Breakpoint || Sleep ∞
-          run: |        
-            while :; do sleep 1; done   
-
         - name: List Artifacts && Unpack
           run: |
-            ls -laR /tmp/releases && cd /tmp/releases
+            ls -laR /tmp/releases/tmux_amd_x86_64_Linux/ && cd /tmp/releases/tmux_amd_x86_64_Linux
             #aarch64_arm64
             #amd_x86_64
             #gunzip -c "./tmux_amd_x86_64_Linux.gz" > tmux_amd_x86_64_Linux
@@ -154,5 +139,5 @@ jobs:
             token: "${{ secrets.GITHUB_TOKEN }}"
             body_path: "/tmp/RELEASE_NOTE.md"
             files: |
-              /tmp/releases/*
+              /tmp/releases/tmux_amd_x86_64_Linux/*
 #------------------------------------------------------------------------------------#        
