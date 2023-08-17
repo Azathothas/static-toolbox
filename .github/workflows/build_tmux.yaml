@@ -1,0 +1,143 @@
+name: ⚙️ Build Tmux 📦
+#MAX_RUNTIME:  
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "15 18 * * *" #  12:00 AM Nepal Time Midnight EveryDay
+  
+env:
+  GITHUB_TOKEN: ${{ secrets.STATIC_TOOLBOX }}
+#------------------------------------------------------------------------------------#
+jobs:
+#------------------------------------------------------------------------------------#
+    build-x86-64:
+      name: Build Tmux (ARCH=x86-64)
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout Repo
+          uses: actions/checkout@v3
+
+        - name: Install CoreUtils & Deps
+          run: |
+            sudo apt-get update -y
+            sudo apt-get install automake b3sum build-essential ca-certificates ccache lzip jq make musl musl-dev musl-tools p7zip-full wget -y
+        - name: Build Tmux
+          run: |
+            set -x ; set +e
+            # Build
+            bash <(curl -qfsSL "https://raw.githubusercontent.com/Azathothas/static-toolbox/master/build/targets/build_tmux.sh")
+            # Organize (Def Output: /tmp/tmux-static)
+            # /tmp/tmux-static/bin/tmux.linux-amd64.stripped.gz
+            # /tmp/tmux-static/bin/tmux.linux-amd64.gz
+            cd "$(find /tmp -type d -name 'tmux*' 2>/dev/null | head -n 1)/bin"
+            # Copy to releases
+            mkdir -p "/tmp/releases"
+            ls -lah tmux*
+            mv $(find . -type f -name '*strip*' -name '*.gz' 2>/dev/null) "./tmux_amd_x86_64_Linux.gz"
+            ls -lah '*.gz'
+            # Copy the tar
+            cp "./tmux_amd_x86_64_Linux.gz" "/tmp/releases/tmux_amd_x86_64_Linux.gz"
+            # gunzip & copy 
+            #gunzip $(find . -type f -name '*strip*' -name '*.gz' 2>/dev/null) 
+            #cp $(find . -type f -name '*tmux_amd_x86_64_Linux*' ! -name '*.gz' 2>/dev/null) "/tmp/releases"
+    
+        - name: Upload artifacts
+          uses: actions/upload-artifact@v3
+          with:
+              name: tmux_amd_x86_64_Linux
+              path: /tmp/releases
+#------------------------------------------------------------------------------------#
+
+
+#------------------------------------------------------------------------------------#
+    create-release:
+      name: Create Tmux Release
+      runs-on: ubuntu-latest
+      needs: [build-x86-64]
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+
+        - name: Setup Env
+          run: |
+            # Create tmp dir for releases
+            mkdir /tmp/releases
+            # Get $VERSION
+            export TMUX_VERSION="$(curl -qfsSL https://api.github.com/repos/tmux/tmux/releases/latest | jq -r '.tag_name')"
+            # If we get rate-limited, git clone the repo
+            if [ -z "$TMUX_VERSION" ]; then
+              cd $(mktemp -d) && git clone https://github.com/tmux/tmux && cd tmux
+              export TMUX_VERSION=$(git tag --sort=-creatordate | head -n 1)
+            fi
+            # Export it to ENV
+            echo "TMUX_VERSION=$TMUX_VERSION" >> $GITHUB_ENV
+
+        - name: Download Artifacts
+          uses: actions/download-artifact@v3
+          with:
+            path: /tmp/releases
+
+        - name: List Artifacts && Unpack
+          run: |
+            ls -laR /tmp/releases && cd /tmp/releases
+            #aarch64_arm64
+            #amd_x86_64
+            #gunzip -c "./tmux_amd_x86_64_Linux.gz" > tmux_amd_x86_64_Linux
+            gunzip --keep --verbose "./tmux_amd_x86_64_Linux.gz"
+            #Also create a tar.gz
+            tar -czvf "./tmux_amd_x86_64_Linux.tar.gz" "./tmux_amd_x86_64_Linux"
+            # .bz2
+            tar -cjvf "./tmux_amd_x86_64_Linux.tar.bz2" "./tmux_amd_x86_64_Linux"
+            #armv7_eabihf
+            
+        - name: Create Body for Release
+          run: |
+            set +e
+            cd /tmp/releases
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            echo '---' >> /tmp/RELEASE_NOTE.md
+            echo '```console' >> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            echo "Changelog: 'https://github.com/tmux/tmux/releases/tag/$TMUX_VERSION'" >> /tmp/RELEASE_NOTE.md
+            echo "Install: 'https://github.com/Azathothas/static-toolbox/blob/master/README.md#tmux'" >> /tmp/RELEASE_NOTE.md       
+            echo -e "" >> /tmp/RELEASE_NOTE.md            
+            echo -e "--> METADATA" >> /tmp/RELEASE_NOTE.md
+            /bin/bash -c 'PS4="$ "; file * | grep -v '.txt' '&>> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            echo -e "--> SHA256SUM" >> /tmp/RELEASE_NOTE.md
+            /bin/bash -c 'PS4="$ ";sha256sum * | grep -v '.txt' ' &>> /tmp/RELEASE_NOTE.md  
+            echo -e '```\n' >> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            echo '---' >> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md         
+            echo '- #### Version' >> /tmp/RELEASE_NOTE.md
+            echo '```console' >> /tmp/RELEASE_NOTE.md
+            /bin/bash -c 'PS4="$ "; ./tmux_amd_x86_64_Linux -V' &>> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            /bin/bash -c 'PS4="$ "; ./tmux_amd_x86_64_Linux --help' &>> /tmp/RELEASE_NOTE.md
+            echo '```' >> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            echo '---' >> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            echo '- #### Sizes' >> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            echo '```console' >> /tmp/RELEASE_NOTE.md
+            /bin/bash -c 'PS4="$ "; ls -lh ./* | grep -v '.txt' | awk "{print \$5, \$9}" | column -t' &>> /tmp/RELEASE_NOTE.md
+            echo -e "" >> /tmp/RELEASE_NOTE.md
+            echo '```' >> /tmp/RELEASE_NOTE.md         
+            echo -e "" >> /tmp/RELEASE_NOTE.md                  
+          continue-on-error: true
+        
+        - name: Releaser
+          uses: softprops/action-gh-release@v0.1.15
+          with:
+            name: "tmux ${{ env.TMUX_VERSION }}"
+            tag_name: "tmux-${{ env.TMUX_VERSION }}"
+            prerelease: false
+            draft: false
+            generate_release_notes: false
+            token: "${{ secrets.GITHUB_TOKEN }}"
+            body_path: "/tmp/RELEASE_NOTE.md"
+            files: |
+              /tmp/releases/*
+#------------------------------------------------------------------------------------#        
