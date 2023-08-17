@@ -94,7 +94,7 @@ jobs:
           run: |
             set +e
             cd /tmp/releases/tmux_amd_x86_64_Linux
-            sudo chmod +xwr /tmp/releases/tmux_amd_x86_64_Linux/_Linux 
+            sudo chmod +xwr /tmp/releases/tmux_amd_x86_64_Linux/*_Linux 
             echo -e "" >> /tmp/RELEASE_NOTE.md
             echo '---' >> /tmp/RELEASE_NOTE.md
             echo '```console' >> /tmp/RELEASE_NOTE.md
