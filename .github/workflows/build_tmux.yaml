@@ -32,9 +32,9 @@ jobs:
             cd "$(find /tmp -type d -name 'tmux*' 2>/dev/null | head -n 1)/bin"
             # Copy to releases
             mkdir -p "/tmp/releases"
-            ls -lah tmux*
+            ls -laR
             mv $(find . -type f -name '*strip*' -name '*.gz' 2>/dev/null) "./tmux_amd_x86_64_Linux.gz"
-            ls -lah '*.gz'
+            ls -laR
             # Copy the tar
             cp "./tmux_amd_x86_64_Linux.gz" "/tmp/releases/tmux_amd_x86_64_Linux.gz"
             # gunzip & copy 
