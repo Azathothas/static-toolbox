@@ -18,7 +18,7 @@ jobs:
         version: ${{ steps.build_tcpdump.outputs.PACKAGED_VERSION }}
       steps:
         - name: Checkout
-          uses: actions/checkout@v3
+          uses: actions/checkout@v4
 
         - name: Install dependencies
           run: sudo apk update && sudo apk add bash && sudo bash build/install_deps_alpine.sh
@@ -39,7 +39,7 @@ jobs:
       container: muslcc/x86_64:x86_64-linux-musl
       steps:
         - name: Checkout
-          uses: actions/checkout@v3
+          uses: actions/checkout@v4
 
         - name: Install dependencies
           run: sudo apk update && sudo apk add bash && sudo bash build/install_deps_alpine.sh
@@ -60,7 +60,7 @@ jobs:
       container: muslcc/x86_64:arm-linux-musleabihf
       steps:
         - name: Checkout
-          uses: actions/checkout@v3
+          uses: actions/checkout@v4
 
         - name: Install dependencies
           run: sudo apk update && sudo apk add bash && sudo bash build/install_deps_alpine.sh
@@ -81,7 +81,7 @@ jobs:
       container: muslcc/x86_64:aarch64-linux-musl
       steps:
         - name: Checkout
-          uses: actions/checkout@v3
+          uses: actions/checkout@v4
 
         - name: Install dependencies
           run: sudo apk update && sudo apk add bash && sudo bash build/install_deps_alpine.sh
@@ -102,7 +102,7 @@ jobs:
       needs: [build-x86, build-x86_64, build-armhf, build-aarch64]
       steps:
         - name: Checkout
-          uses: actions/checkout@v3
+          uses: actions/checkout@v4
 
         - name: Prepare Environment
           run: mkdir /tmp/releases
