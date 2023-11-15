@@ -1,13 +1,13 @@
 - #### 📦 Status
-| Tool | Status |
-| ---- | ------ |
-|[GDB & GDBServer](https://github.com/Azathothas/static-toolbox/actions/workflows/build-gdb.yml)|[![⚙️ Build GDB 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build-gdb.yml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build-gdb.yml)|
-|[Git](https://github.com/git/git)|[![⚙️ Build Git Binaries 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build_git.yaml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build_git.yaml)
-|[Nmap](https://github.com/Azathothas/static-toolbox/actions/workflows/build-nmap.yml)|[![⚙️ Build Nmap 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build-nmap.yml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build-nmap.yml)|
-|[OpenSSH](https://github.com/Azathothas/static-toolbox/actions/workflows/build-openssh.yml)|[![⚙️ Build OpenSSH 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build-openssh.yml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build-openssh.yml)|
-|[Socat](https://github.com/Azathothas/static-toolbox/actions/workflows/build-socat.yml)|[![⚙️ Build Socat 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build-socat.yml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build-socat.yml)|
-|[Strace](https://github.com/Azathothas/static-toolbox/actions/workflows/build-strace.yml)|[![⚙️ Build Strace 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build-strace.yml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build-strace.yml)|
-|[TCPDump](https://github.com/Azathothas/static-toolbox/actions/workflows/build-tcpdump.yml)|[![⚙️ Build TCPDump 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build-tcpdump.yml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build-tcpdump.yml)|
+| Tool | Status | Arch |
+| ---- | ------ | ---- |
+|[GDB & GDBServer](https://github.com/Azathothas/static-toolbox/actions/workflows/build-gdb.yml)|[![⚙️ Build GDB 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build-gdb.yml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build-gdb.yml)| |
+|[Git](https://github.com/git/git)|[![⚙️ Build Git Binaries 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build_git.yaml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build_git.yaml)| `x86-64` |
+|[Nmap](https://github.com/Azathothas/static-toolbox/actions/workflows/build-nmap.yml)|[![⚙️ Build Nmap 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build-nmap.yml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build-nmap.yml)| `aarch64` `arm64` `armhf` `x86` `x86-64` |
+|[OpenSSH](https://github.com/Azathothas/static-toolbox/actions/workflows/build-openssh.yml)|[![⚙️ Build OpenSSH 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build-openssh.yml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build-openssh.yml)|`aarch64` `arm64` `armv7-eabihf` `x86-64`|
+|[Socat](https://github.com/Azathothas/static-toolbox/actions/workflows/build-socat.yml)|[![⚙️ Build Socat 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build-socat.yml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build-socat.yml)| `aarch64` `arm64` `armhf` `powerpc32` `powerpc64` `x86` `x86-64` |
+|[Strace](https://github.com/Azathothas/static-toolbox/actions/workflows/build-strace.yml)|[![⚙️ Build Strace 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build-strace.yml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build-strace.yml)| `aarch64` `arm64` `armhf` `x86` `x86-64` |
+|[TCPDump](https://github.com/Azathothas/static-toolbox/actions/workflows/build-tcpdump.yml)|[![⚙️ Build TCPDump 📦](https://github.com/Azathothas/static-toolbox/actions/workflows/build-tcpdump.yml/badge.svg)](https://github.com/Azathothas/static-toolbox/actions/workflows/build-tcpdump.yml)| `aarch64` `arm64` `armhf` `x86` `x86-64` |
 
 ---
 - #### Catalogue
