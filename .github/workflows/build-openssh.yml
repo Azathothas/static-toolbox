@@ -32,10 +32,10 @@ jobs:
           run: |
             set -x ; set +e
             # Git Clone Repo
-            cd $(mktemp -d) && git clone https://github.com/Azathothas/static-cross-openssh
+            cd $(mktemp -d) && git clone "https://github.com/binary-manu/static-cross-openssh"
             cd "./static-cross-openssh" ; make switch-toolchain 2>/dev/null
             # Make all
-            make -j$(nproc) ARCH=aarch64 PREFIX=/ all
+            make -j"$(($(nproc)+1))" ARCH=aarch64 PREFIX=/ __all__/VERSION=latest all
             # Extract & Put Everything in a sngle dir
             find "./bin" -type f -name '*.tgz' -exec sh -c 'mkdir -p "${1%.tgz}" && tar -xzf "$1" -C "${1%.tgz}" --strip-components=1' sh {} \;
             # rm the original .tgz & empty files
@@ -71,10 +71,10 @@ jobs:
             export OPENSSH_VERSION="$curl -qfsSL https://api.github.com/repos/openssh/openssh-portable/tags | jq -r '.[0].name')"
             echo "OPENSSH_VERSION=$OPENSSH_VERSION" >> $GITHUB_ENV
             # Git Clone Repo
-            cd $(mktemp -d) && git clone https://github.com/Azathothas/static-cross-openssh
+            cd $(mktemp -d) && git clone "https://github.com/binary-manu/static-cross-openssh"
             cd "./static-cross-openssh" ; make switch-toolchain 2>/dev/null
             # Make all
-            make -j$(nproc) ARCH=armv7-eabihf PREFIX=/ all
+            make -j"$(($(nproc)+1))" ARCH=armv7-eabihf PREFIX=/ __all__/VERSION=latest all
             # Extract & Put Everything in a sngle dir
             find "./bin" -type f -name '*.tgz' -exec sh -c 'mkdir -p "${1%.tgz}" && tar -xzf "$1" -C "${1%.tgz}" --strip-components=1' sh {} \;
             # rm the original .tgz & empty files
@@ -107,10 +107,10 @@ jobs:
           run: |
             set -x ; set +e
             # Git Clone Repo
-            cd $(mktemp -d) && git clone https://github.com/Azathothas/static-cross-openssh
+            cd $(mktemp -d) && git clone "https://github.com/binary-manu/static-cross-openssh"
             cd "./static-cross-openssh" ; make switch-toolchain 2>/dev/null
             # Make all
-            make -j$(nproc) ARCH=x86-64 PREFIX=/ all
+            make -j"$(($(nproc)+1))" ARCH=x86-64 PREFIX=/ __all__/VERSION=latest all
             # Extract & Put Everything in a sngle dir
             find "./bin" -type f -name '*.tgz' -exec sh -c 'mkdir -p "${1%.tgz}" && tar -xzf "$1" -C "${1%.tgz}" --strip-components=1' sh {} \;
             # rm the original .tgz & empty files
@@ -228,4 +228,4 @@ jobs:
             body_path: "/tmp/RELEASE_NOTE.md"
             files: |
               /tmp/releases/*
-#------------------------------------------------------------------------------------#        
+#------------------------------------------------------------------------------------#
