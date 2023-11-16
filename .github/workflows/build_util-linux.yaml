@@ -94,7 +94,8 @@ jobs:
           sudo bash "./build.sh"
           #Cleanup
           find . -type f -name "*.tar*" -exec tar -xvf {} \;
-          tar -cvf "./util_linux_amd_x86_64.tar" "./release"
+          mv "./release" "./util_linux_amd_x86_64"
+          tar -cvf "./util_linux_amd_x86_64.tar" "./util_linux_amd_x86_64"
           #Move to releases
           mv "./util_linux_amd_x86_64.tar" "/tmp/releases" ; popd
           #meta
@@ -123,7 +124,8 @@ jobs:
               git clone "https://github.com/Azathothas/util-linux-static" && cd "./util-linux-static"
               sudo bash "./build.sh"
               find . -type f -name "*.tar*" -exec tar -xvf {} \;
-              tar -cvf "./util_linux_aarch64_arm64.tar" "./release"
+              mv "./release" "./util_linux_aarch64_arm64"
+              tar -cvf "./util_linux_aarch64_arm64.tar" "./util_linux_aarch64_arm64"
               mv "./util_linux_aarch64_arm64.tar" /
             '
           #Copy 
