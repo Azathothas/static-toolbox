@@ -112,9 +112,15 @@ jobs:
             bash -c '
               export DEBIAN_FRONTEND=noninteractive
               apt-get update -y ; apt-get dist-upgrade -y ; apt-get upgrade -y
-              apt install -y autoconf automake autopoint curl devscripts dpkg-dev file g++ make libtool jq pkgconf tcl patch pkg-config wget tar unzip
-              apt install autoconf automake autopoint binutils bison build-essential ca-certificates coreutils curl dos2unix git gcc htop flex file jq moreutils pkg-config sudo wget -y
+              apt install -y autoconf automake autopoint curl devscripts dpkg-dev file g++ gawk make libtool jq pkgconf tcl patch pkg-config wget tar unzip
+              apt install autoconf automake autopoint binutils bison build-essential ca-certificates coreutils curl dos2unix git gcc htop flex file jq moreutils nano pkg-config sudo util-linux wget -y
               apt install "*glibc*" "libssl*" lzip musl musl-dev musl-tools "openssl*" -y
+              apt install asciidoctor libcapnp-dev libcap-ng-dev libcap-ng-utils libpython3-dev po4a zlib1g-dev -y
+              pushd "$(mktemp -d)" && curl -qfLJO "$(curl -qfsSL https://api.github.com/repos/upx/upx/releases/latest | jq -r ".assets[].browser_download_url" | grep -i "arm64_linux")"
+              find . -type f -name "*tar*" -exec tar -xvf {} \;
+              sudo find . -type f -name "upx" -exec mv {} "/usr/bin/upx" \;  
+              sudo cp "/usr/bin/upx" "/usr/local/bin/upx"
+              sudo chmod +xwr "/usr/bin/upx" "/usr/local/bin/upx" ; upx -h ; popd
               git clone "https://github.com/VHSgunzo/coreutils-static.git" && cd "./coreutils-static"
               sudo bash "./build.sh"
               find . -type f -name "*.tar*" -exec tar -xvf {} \;
