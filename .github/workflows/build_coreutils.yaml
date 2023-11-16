@@ -95,7 +95,8 @@ jobs:
           sudo bash "./build.sh"
           #Cleanup
           find . -type f -name "*.tar*" -exec tar -xvf {} \;
-          tar -cvf "./coreutils_amd_x86_64.tar" "./release"
+          mv "./release" "./coreutils_amd_x86_64"
+          tar -cvf "./coreutils_amd_x86_64.tar" "./coreutils_amd_x86_64"
           #Move to releases
           mv "./coreutils_amd_x86_64.tar" "/tmp/releases" ; popd
           #meta
@@ -124,7 +125,8 @@ jobs:
               git clone "https://github.com/VHSgunzo/coreutils-static.git" && cd "./coreutils-static"
               sudo bash "./build.sh"
               find . -type f -name "*.tar*" -exec tar -xvf {} \;
-              tar -cvf "./coreutils_aarch64_arm64.tar" "./release"
+              mv "./release" "./coreutils_aarch64_arm64"
+              tar -cvf "./coreutils_aarch64_arm64.tar" "./coreutils_aarch64_arm64"
               mv "./coreutils_aarch64_arm64.tar" /
             '
           #Copy 
