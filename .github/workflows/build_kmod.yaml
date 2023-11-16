@@ -94,7 +94,8 @@ jobs:
           sudo bash "./build.sh"
           #Cleanup
           find . -type f -name "*.tar*" -exec tar -xvf {} \;
-          tar -cvf "./kmod_amd_x86_64.tar" "./release"
+          mv "./release" "./kmod_amd_x86_64"
+          tar -cvf "./kmod_amd_x86_64.tar" "./kmod_amd_x86_64"
           #Move to releases
           mv "./kmod_amd_x86_64.tar" "/tmp/releases" ; popd
           #meta
@@ -123,7 +124,8 @@ jobs:
               git clone "https://github.com/Azathothas/kmod-static" && cd "./kmod-static"
               sudo bash "./build.sh"
               find . -type f -name "*.tar*" -exec tar -xvf {} \;
-              tar -cvf "./kmod_aarch64_arm64.tar" "./release"
+              mv "./release" "./kmod_aarch64_arm64"
+              tar -cvf "./kmod_aarch64_arm64.tar" "./kmod_aarch64_arm64"
               mv "./kmod_aarch64_arm64.tar" /
             '
           #Copy 
