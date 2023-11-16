@@ -89,7 +89,7 @@ jobs:
           set -x ; set +e
           #--------------#
           #Get Script
-          pushd "$(mktemp -d)" ; git clone "https://github.com/VHSgunzo/util-linux-static.git" && cd "./util-linux-static"
+          pushd "$(mktemp -d)" ; git clone "https://github.com/Azathothas/util-linux-static" && cd "./util-linux-static"
           #Build
           sudo bash "./build.sh"
           #Cleanup
