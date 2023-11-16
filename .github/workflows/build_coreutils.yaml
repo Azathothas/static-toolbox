@@ -28,7 +28,7 @@ jobs:
           set +e
           sudo apt-get update -y
           sudo apt-get install automake b3sum build-essential ca-certificates ccache lzip jq make musl musl-dev musl-tools p7zip-full wget -y
-          sudo apt-get install -y --no-install-recommends autoconf automake autopoint binutils bison build-essential ca-certificates flex file jq patch patchelf pkg-config python3-pip qemu-user-static wget
+          sudo apt-get install -y --no-install-recommends autoconf automake autopoint binutils bison build-essential ca-certificates flex file jq patch patchelf pkg-config python3-pip qemu-user-static wget xsltproc
         continue-on-error: true
         
       - name: Install Addons
@@ -112,7 +112,7 @@ jobs:
             bash -c '
               export DEBIAN_FRONTEND=noninteractive
               apt-get update -y ; apt-get dist-upgrade -y ; apt-get upgrade -y
-              apt install -y autoconf automake autopoint curl devscripts dpkg-dev file g++ gawk make libtool jq pkgconf tcl patch pkg-config wget tar unzip
+              apt install -y autoconf automake autopoint curl devscripts dpkg-dev file g++ gawk make libtool jq pkgconf tcl patch pkg-config wget tar unzip xsltproc
               apt install autoconf automake autopoint binutils bison build-essential ca-certificates coreutils curl dos2unix git gcc htop flex file jq moreutils nano pkg-config sudo util-linux wget -y
               apt install "*glibc*" "libssl*" lzip musl musl-dev musl-tools "openssl*" -y
               apt install asciidoctor libcapnp-dev libcap-ng-dev libcap-ng-utils libpython3-dev po4a zlib1g-dev -y
