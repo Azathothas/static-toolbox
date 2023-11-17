@@ -15,6 +15,7 @@ apk add \
     flex \
     gawk \
     git \
+    gmp \
     gmp-dev \
     jq \
     libffi-dev \
@@ -27,6 +28,7 @@ apk add \
     musl \
     mpc \
     mpfr \
+    mpfr-dev \
     patch \
     patchelf \
     pkgconfig \
