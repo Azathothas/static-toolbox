@@ -90,8 +90,7 @@ jobs:
           mv "./release/awk" "/tmp/releases/awk_amd_x86_64"
           mv "./release/gawk" "/tmp/releases/gawk_amd_x86_64"
           #meta
-          file "/tmp/releases/awk_amd_x86_64" && ls "/tmp/releases/awk_amd_x86_64" -lahr             
-          file "/tmp/releases/gawk_amd_x86_64" && ls "/tmp/releases/gawk_amd_x86_64" -lahr
+          file /tmp/releases/* && ls /tmp/releases/* -lahr
         continue-on-error: true
 
       - name: Build gawk for aarch64_arm64_arm64-v8 (Docker)
@@ -124,8 +123,7 @@ jobs:
           docker cp "arm64v8_debian:./awk_aarch64_arm64" "/tmp/releases/awk_aarch64_arm64"
           docker cp "arm64v8_debian:./gawk_aarch64_arm64" "/tmp/releases/gawk_aarch64_arm64"
           #meta
-          file "/tmp/releases/awk_aarch64_arm64" && ls "/tmp/releases/awk_aarch64_arm64" -lahr
-          file "/tmp/releases/gawk_aarch64_arm64" && ls "/tmp/releases/gawk_aarch64_arm64" -lahr
+          file /tmp/releases/* && ls /tmp/releases/* -lahr
           #Delete Containers
           docker ps -a -q | xargs docker rm >/dev/null 2>&1
           #Del Docker Images
@@ -147,8 +145,7 @@ jobs:
           mv "./release/grep" "/tmp/releases/grep_amd_x86_64"
           mv "./release/fgrep" "/fgrep_aarch64_arm64"
           #meta
-          file "/tmp/releases/grep_amd_x86_64" && ls "/tmp/releases/grep_amd_x86_64" -lahr
-          file "/tmp/releases/fgrep_amd_x86_64" && ls "/tmp/releases/fgrep_amd_x86_64" -lahr
+          file /tmp/releases/* && ls /tmp/releases/* -lahr
         continue-on-error: true
 
       - name: Build grep for aarch64_arm64_arm64-v8 (Docker)
@@ -179,8 +176,7 @@ jobs:
           #Copy 
           docker cp "arm64v8_debian:./grep_aarch64_arm64" "/tmp/releases/grep_aarch64_arm64"
           #meta
-          file "/tmp/releases/grep_aarch64_arm64" && ls "/tmp/releases/grep_aarch64_arm64" -lahr
-          file "/tmp/releases/fgrep_aarch64_arm64" && ls "/tmp/releases/fgrep_aarch64_arm64" -lahr
+          file /tmp/releases/* && ls /tmp/releases/* -lahr
           #Delete Containers
           docker ps -a -q | xargs docker rm >/dev/null 2>&1
           #Del Docker Images
@@ -201,7 +197,7 @@ jobs:
           find . -type f -name "*.tar*" -exec tar -xvf {} \;
           mv "./release/sed" "/tmp/releases/sed_amd_x86_64"
           #meta
-          file "/tmp/releases/sed_amd_x86_64" && ls "/tmp/releases/sed_amd_x86_64" -lahr
+          file /tmp/releases/* && ls /tmp/releases/* -lahr
         continue-on-error: true
 
       - name: Build sed for aarch64_arm64_arm64-v8 (Docker)
@@ -231,7 +227,7 @@ jobs:
           #Copy 
           docker cp "arm64v8_debian:./sed_aarch64_arm64" "/tmp/releases/sed_aarch64_arm64"
           #meta
-          file "/tmp/releases/sed_aarch64_arm64" && ls "/tmp/releases/sed_aarch64_arm64" -lahr
+          file /tmp/releases/* && ls /tmp/releases/* -lahr
           #Delete Containers
           docker ps -a -q | xargs docker rm >/dev/null 2>&1
           #Del Docker Images
@@ -252,7 +248,7 @@ jobs:
           find . -type f -name "*.tar*" -exec tar -xvf {} \;
           mv "./release/tar" "/tmp/releases/tar_amd_x86_64"
           #meta
-          file "/tmp/releases/tar_amd_x86_64" && ls "/tmp/releases/tar_amd_x86_64" -lahr
+          file /tmp/releases/* && ls /tmp/releases/* -lahr
         continue-on-error: true
 
       - name: Build tar for aarch64_arm64_arm64-v8 (Docker)
@@ -282,7 +278,7 @@ jobs:
           #Copy 
           docker cp "arm64v8_debian:./tar_aarch64_arm64" "/tmp/releases/tar_aarch64_arm64"
           #meta
-          file "/tmp/releases/tar_aarch64_arm64" && ls "/tmp/releases/tar_aarch64_arm64" -lahr
+          file /tmp/releases/* && ls /tmp/releases/* -lahr
           #Delete Containers
           docker ps -a -q | xargs docker rm >/dev/null 2>&1
           #Del Docker Images
@@ -303,7 +299,7 @@ jobs:
           find . -type f -name "*.tar*" -exec tar -xvf {} \;
           mv "./release/which" "/tmp/releases/which_amd_x86_64"
           #meta
-          file "/tmp/releases/which_amd_x86_64" && ls "/tmp/releases/which_amd_x86_64" -lahr
+          file /tmp/releases/* && ls /tmp/releases/* -lahr
         continue-on-error: true
 
       - name: Build which for aarch64_arm64_arm64-v8 (Docker)
@@ -333,7 +329,7 @@ jobs:
           #Copy 
           docker cp "arm64v8_debian:./which_aarch64_arm64" "/tmp/releases/which_aarch64_arm64"
           #meta
-          file "/tmp/releases/which_aarch64_arm64" && ls "/tmp/releases/which_aarch64_arm64" -lahr
+          file /tmp/releases/* && ls /tmp/releases/* -lahr
           #Delete Containers
           docker ps -a -q | xargs docker rm >/dev/null 2>&1
           #Del Docker Images
@@ -366,12 +362,19 @@ jobs:
           echo -e "" >> /tmp/RELEASE_NOTE.md
         continue-on-error: true
 
+      - name: Cat Release Body
+        run: |
+          set +e
+          cat "/tmp/RELEASE_NOTE.md"
+        continue-on-error: true
+        
       - name: Get DateTime
         run: |
           # Date Time
           NEPALI_TIME=$(TZ='Asia/Kathmandu' date +'%Y-%m-%d (%I:%M:%S %p)')
           echo "NEPALI_TIME=$NEPALI_TIME" >> $GITHUB_ENV
-
+        continue-on-error: true
+        
       - name: Releaser
         uses: softprops/action-gh-release@v0.1.15
         with:
