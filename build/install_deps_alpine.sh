@@ -4,7 +4,10 @@ apk add \
     autoconf \
     automake \
     bash \
+    bind-tools \
+    binutils \
     bison \
+    build-base \
     cmake \
     coreutils \
     curl \
@@ -17,15 +20,30 @@ apk add \
     libffi-dev \
     libtool \
     libunistring-dev \
+    linux-headers \
     lttng-ust-dev \
     make \
+    moreutils \
+    musl \
+    musl-util \
+    mpc \
+    mpfr \
     patch \
+    patchelf \
+    pkgconfig \
+    python3-dev \
     perl \
+    py3-pip \
+    py3-distro \
+    py3-netifaces \
+    pipx \
     qemu-aarch64 \
     qemu-arm \
     qemu-ppc \
     qemu-ppc64 \
     rsync \
+    sysfsutils \
+    tar \
     texinfo \
     util-linux \
     wget \
