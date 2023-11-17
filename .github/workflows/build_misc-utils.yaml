@@ -87,7 +87,7 @@ jobs:
           sudo bash "./build.sh"
           #Cleanup
           find . -type f -name "*.tar*" -exec tar -xvf {} \;
-          mv "./release/awk" "/tmp/releases/awk_amd_x86_64"
+          cp "./release/gawk" "/tmp/releases/awk_amd_x86_64"
           mv "./release/gawk" "/tmp/releases/gawk_amd_x86_64"
           #meta
           file /tmp/releases/* && ls /tmp/releases/* -lahr
@@ -115,7 +115,7 @@ jobs:
               git clone "https://github.com/Azathothas/gawk-static" && cd "./gawk-static"
               sudo bash "./build.sh"
               find . -type f -name "*.tar*" -exec tar -xvf {} \;
-              mv "./release/awk" "/awk_aarch64_arm64"
+              cp "./release/gawk" "/awk_aarch64_arm64"
               mv "./release/gawk" "/gawk_aarch64_arm64"
 
             '
