@@ -74,9 +74,9 @@ jobs:
           mkdir -p "/tmp/releases"
           # Get $VERSION
             cd $(mktemp -d) && git clone "https://git.savannah.gnu.org/git/findutils.git" && cd "./findutils"
-            export XZ_VERSION=$(git tag --sort=-creatordate | head -n 1)
+            export FINDUTILS_VERSION=$(git tag --sort=-creatordate | head -n 1)
           # Export it to ENV
-          echo "XZ_VERSION=$XZ_VERSION" >> $GITHUB_ENV
+          echo "FINDUTILS_VERSION=$FINDUTILS_VERSION" >> $GITHUB_ENV
         continue-on-error: true
 
       - name: Build xz for amd_x86_64 (Natively)
@@ -142,7 +142,7 @@ jobs:
           echo '---' >> /tmp/RELEASE_NOTE.md
           echo '```console' >> /tmp/RELEASE_NOTE.md
           echo -e "" >> /tmp/RELEASE_NOTE.md
-          echo "Changelog: 'https://gitlab.com/findutils-ng/findutils/-/blob/master/NEWS'" >> /tmp/RELEASE_NOTE.md
+          echo "Changelog: 'https://savannah.gnu.org/news/?group=findutils'" >> /tmp/RELEASE_NOTE.md
           echo -e "" >> /tmp/RELEASE_NOTE.md
           echo -e "--> METADATA" >> /tmp/RELEASE_NOTE.md
           /bin/bash -c 'PS4="$ "; file * | grep -v '.txt' '&>> /tmp/RELEASE_NOTE.md
@@ -165,8 +165,8 @@ jobs:
       - name: Releaser
         uses: softprops/action-gh-release@v0.1.15
         with:
-          name: "findutils ${{ env.XZ_VERSION }}"
-          tag_name: "findutils-${{ env.XZ_VERSION }}"
+          name: "findutils ${{ env.FINDUTILS_VERSION }}"
+          tag_name: "findutils-${{ env.FINDUTILS_VERSION }}"
           prerelease: false
           draft: false
           generate_release_notes: false
