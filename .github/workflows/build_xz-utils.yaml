@@ -142,7 +142,7 @@ jobs:
           echo '---' >> /tmp/RELEASE_NOTE.md
           echo '```console' >> /tmp/RELEASE_NOTE.md
           echo -e "" >> /tmp/RELEASE_NOTE.md
-          echo "Changelog: 'https://gitlab.com/xz_utils-ng/xz_utils/-/blob/master/NEWS'" >> /tmp/RELEASE_NOTE.md
+          echo "Changelog: 'https://git.tukaani.org/?p=xz.git;a=blob;f=NEWS;hb=HEAD'" >> /tmp/RELEASE_NOTE.md
           echo -e "" >> /tmp/RELEASE_NOTE.md
           echo -e "--> METADATA" >> /tmp/RELEASE_NOTE.md
           /bin/bash -c 'PS4="$ "; file * | grep -v '.txt' '&>> /tmp/RELEASE_NOTE.md
@@ -165,7 +165,7 @@ jobs:
       - name: Releaser
         uses: softprops/action-gh-release@v0.1.15
         with:
-          name: "xz_utils ${{ env.XZ_VERSION }}"
+          name: "xz-utils ${{ env.XZ_VERSION }}"
           tag_name: "xz_utils-${{ env.XZ_VERSION }}"
           prerelease: false
           draft: false
