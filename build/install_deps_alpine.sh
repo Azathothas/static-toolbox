@@ -25,7 +25,6 @@ apk add \
     make \
     moreutils \
     musl \
-    musl-util \
     mpc \
     mpfr \
     patch \
@@ -36,7 +35,6 @@ apk add \
     py3-pip \
     py3-distro \
     py3-netifaces \
-    pipx \
     qemu-aarch64 \
     qemu-arm \
     qemu-ppc \
