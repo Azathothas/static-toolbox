@@ -378,8 +378,8 @@ jobs:
       - name: Releaser
         uses: softprops/action-gh-release@v0.1.15
         with:
-          name: "misc-utils_${{ env.NEPALI_TIME }}"
-          tag_name: "misc_utils_${{ env.NEPALI_TIME }}"
+          name: "misc-utils"
+          tag_name: "misc_utils_latest"
           prerelease: false
           draft: false
           generate_release_notes: false
