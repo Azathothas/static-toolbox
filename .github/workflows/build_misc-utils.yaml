@@ -143,7 +143,6 @@ jobs:
           #Cleanup
           find . -type f -name "*.tar*" -exec tar -xvf {} \;
           mv "./release/grep" "/tmp/releases/grep_amd_x86_64"
-          mv "./release/fgrep" "/fgrep_aarch64_arm64"
           #meta
           file /tmp/releases/* && ls /tmp/releases/* -lahr
         continue-on-error: true
@@ -171,7 +170,6 @@ jobs:
               sudo bash "./build.sh"
               find . -type f -name "*.tar*" -exec tar -xvf {} \;
               mv "./release/grep" "/grep_aarch64_arm64"
-              mv "./release/fgrep" "/fgrep_aarch64_arm64"
             '
           #Copy 
           docker cp "arm64v8_debian:./grep_aarch64_arm64" "/tmp/releases/grep_aarch64_arm64"
