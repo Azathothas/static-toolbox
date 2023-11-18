@@ -159,23 +159,86 @@ jobs:
         - name: List Artifacts && Unpack
           run: |
             ls -laR /tmp/releases && cd /tmp/releases
-            #aarch64_arm64
+            ##aarch64_arm64##
+            #---------------#
             find . -type f -name '*aarch64*' -exec tar -xzvf {} \;
-            find ./bin -type f -name '*sshd_config*' -exec mv {} sshd_config_aarch64_arm64_Linux \;
-            find ./bin -type f -name '*sshd*' ! -name '*sshd_config*' -exec mv {} sshd_aarch64_arm64_Linux \;
+            #scp
+            find ./bin -type f -name '*scp*' -exec mv {} scp_aarch64_arm64_Linux \;
+            #sftp
+            find ./bin -type f -name '*sftp*' ! -name '*sftp-server*' -exec mv {} sftp_aarch64_arm64_Linux \;
+            #sftp_server
             find ./bin -type f -name '*sftp-server*' -exec mv {} sftp_server_aarch64_arm64_Linux \;
-            find . -empty -delete 
-            #amd_x86_64
+            #ssh
+            find ./bin -type f -name '*ssh*' ! -name '*sshd*' ! -name "*ssh-*" -exec mv {} ssh_aarch64_arm64_Linux \;
+            #ssh-add
+            find ./bin -type f -name '*ssh-add*' -exec mv {} ssh-add_aarch64_arm64_Linux \;
+            #ssh-agent
+            find ./bin -type f -name '*ssh-agent*' -exec mv {} ssh-agent_aarch64_arm64_Linux \;
+            #ssh-keygen
+            find ./bin -type f -name '*ssh-keygen*' -exec mv {} ssh-keygen_aarch64_arm64_Linux \;
+            #ssh-keyscan
+            find ./bin -type f -name '*ssh-keyscan*' -exec mv {} ssh-keyscan_aarch64_arm64_Linux \;
+            #ssh-keysign
+            find ./bin -type f -name '*ssh-keysign*' -exec mv {} ssh-keysign_aarch64_arm64_Linux \;
+            #sshd
+            find ./bin -type f -name '*sshd*' ! -name '*sshd_config*' -exec mv {} sshd_aarch64_arm64_Linux \;
+            #sshd_config
+            find ./bin -type f -name '*sshd_config*' -exec mv {} sshd_config_aarch64_arm64_Linux \;
+            #Remove Empties
+            find . -empty -delete
+            #---------------#
+            ##amd_x86_64##
             find . -type f -name '*x86-64*' -exec tar -xzvf {} \;
-            find ./bin -type f -name '*sshd_config*' -exec mv {} sshd_config_amd_x86_64_Linux \;
-            find ./bin -type f -name '*sshd*' ! -name '*sshd_config*' -exec mv {} sshd_amd_x86_64_Linux \;
+            #scp
+            find ./bin -type f -name '*scp*' -exec mv {} scp_amd_x86_64_Linux \;
+            #sftp
+            find ./bin -type f -name '*sftp*' ! -name '*sftp-server*' -exec mv {} sftp_amd_x86_64_Linux \;
+            #sftp_server
             find ./bin -type f -name '*sftp-server*' -exec mv {} sftp_server_amd_x86_64_Linux \;
-            find . -empty -delete 
-            #armv7_eabihf
+            #ssh
+            find ./bin -type f -name '*ssh*' ! -name '*sshd*' ! -name "*ssh-*" -exec mv {} ssh_amd_x86_64_Linux \;
+            #ssh-add
+            find ./bin -type f -name '*ssh-add*' -exec mv {} ssh-add_amd_x86_64_Linux \;
+            #ssh-agent
+            find ./bin -type f -name '*ssh-agent*' -exec mv {} ssh-agent_amd_x86_64_Linux \;
+            #ssh-keygen
+            find ./bin -type f -name '*ssh-keygen*' -exec mv {} ssh-keygen_amd_x86_64_Linux \;
+            #ssh-keyscan
+            find ./bin -type f -name '*ssh-keyscan*' -exec mv {} ssh-keyscan_amd_x86_64_Linux \;
+            #ssh-keysign
+            find ./bin -type f -name '*ssh-keysign*' -exec mv {} ssh-keysign_amd_x86_64_Linux \;
+            #sshd
+            find ./bin -type f -name '*sshd*' ! -name '*sshd_config*' -exec mv {} sshd_amd_x86_64_Linux \;
+            #sshd_config
+            find ./bin -type f -name '*sshd_config*' -exec mv {} sshd_config_amd_x86_64_Linux \;
+            #Remove Empties
+            find . -empty -delete
+            #---------------#
+            ##armv7_eabihf##
             find . -type f -name '*armv7-eabihf*' -exec tar -xzvf {} \;
-            find ./bin -type f -name '*sshd_config*' -exec mv {} sshd_config_armv7_eabihf_Linux \;
-            find ./bin -type f -name '*sshd*' ! -name '*sshd_config*' -exec mv {} sshd_armv7_eabihf_Linux \;
+            #scp
+            find ./bin -type f -name '*scp*' -exec mv {} scp_armv7_eabihf_Linux \;
+            #sftp
+            find ./bin -type f -name '*sftp*' ! -name '*sftp-server*' -exec mv {} sftp_armv7_eabihf_Linux \;
+            #sftp_server
             find ./bin -type f -name '*sftp-server*' -exec mv {} sftp_server_armv7_eabihf_Linux \;
+            #ssh
+            find ./bin -type f -name '*ssh*' ! -name '*sshd*' ! -name "*ssh-*" -exec mv {} ssh_armv7_eabihf_Linux \;
+            #ssh-add
+            find ./bin -type f -name '*ssh-add*' -exec mv {} ssh-add_armv7_eabihf_Linux \;
+            #ssh-agent
+            find ./bin -type f -name '*ssh-agent*' -exec mv {} ssh-agent_armv7_eabihf_Linux \;
+            #ssh-keygen
+            find ./bin -type f -name '*ssh-keygen*' -exec mv {} ssh-keygen_armv7_eabihf_Linux \;
+            #ssh-keyscan
+            find ./bin -type f -name '*ssh-keyscan*' -exec mv {} ssh-keyscan_armv7_eabihf_Linux \;
+            #ssh-keysign
+            find ./bin -type f -name '*ssh-keysign*' -exec mv {} ssh-keysign_armv7_eabihf_Linux \;
+            #sshd
+            find ./bin -type f -name '*sshd*' ! -name '*sshd_config*' -exec mv {} sshd_armv7_eabihf_Linux \;
+            #sshd_config
+            find ./bin -type f -name '*sshd_config*' -exec mv {} sshd_config_armv7_eabihf_Linux \;
+            #Remove Empties
             find . -empty -delete
             
         - name: Create Body for Release
