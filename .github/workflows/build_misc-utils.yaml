@@ -368,18 +368,18 @@ jobs:
           cat "/tmp/RELEASE_NOTE.md"
         continue-on-error: true
         
-      - name: Get DateTime
+      - name: Get Safe_DateTime
         run: |
           # Date Time
-          NEPALI_TIME=$(TZ='Asia/Kathmandu' date +'%Y-%m-%d (%I:%M:%S %p)')
-          echo "NEPALI_TIME=$NEPALI_TIME" >> $GITHUB_ENV
+          SAFE_NEPALI_TIME=$(TZ='Asia/Kathmandu' date +'%Y-%m-%d_%I:%M:%S_%p' | tr ' :-' '_')
+          echo "SAFE_NEPALI_TIME=$SAFE_NEPALI_TIME" >> $GITHUB_ENV
         continue-on-error: true
         
       - name: Releaser
         uses: softprops/action-gh-release@v0.1.15
         with:
-          name: "misc-utils"
-          tag_name: "misc_utils_latest"
+          name: "misc-utils Weekly ${{ env.SAFE_NEPALI_TIME }}"
+          tag_name: "misc_utils_${{ env.SAFE_NEPALI_TIME }}"
           prerelease: false
           draft: false
           generate_release_notes: false
