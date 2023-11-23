@@ -94,15 +94,15 @@ jobs:
           ./configure --enable-static --disable-harden
           #Make a multicall-binary : https://github.com/mkj/dropbear/blob/master/MULTI.md
           make PROGRAMS="dropbear dbclient dropbearkey dropbearconvert scp" MULTI=1 -j"$(($(nproc)+1))"
-          mv "./dropbearmulti" "/tmp/releases/dropbearmulti_amd_x86_64"
+          mv "./dropbearmulti" "/tmp/releases/dropbearmulti_amd_x86_64_Linux"
           #Make Single Binaries : https://github.com/mkj/dropbear/blob/master/INSTALL.md
           make clean ; make PROGRAMS="dropbear dbclient dropbearkey dropbearconvert scp" -j"$(($(nproc)+1))"
           #Move to releases
-          mv "./dbclient" "/tmp/releases/dbclient_amd_x86_64"
-          mv "./dropbear" "/tmp/releases/dropbear_amd_x86_64"
-          mv "./dropbearkey" "/tmp/releases/dropbearkey_amd_x86_64"
-          mv "./dropbearconvert" "/tmp/releases/dropbearconvert_amd_x86_64"
-          mv "./scp" "/tmp/releases/dropbearscp_amd_x86_64"
+          mv "./dbclient" "/tmp/releases/dbclient_amd_x86_64_Linux"
+          mv "./dropbear" "/tmp/releases/dropbear_amd_x86_64_Linux"
+          mv "./dropbearkey" "/tmp/releases/dropbearkey_amd_x86_64_Linux"
+          mv "./dropbearconvert" "/tmp/releases/dropbearconvert_amd_x86_64_Linux"
+          mv "./scp" "/tmp/releases/dropbearscp_amd_x86_64_Linux"
           #Doesn't really reduce much size
           ##Make Only Server: https://github.com/mkj/dropbear/blob/master/SMALL.md
           #make clean ; make PROGRAMS="dropbear" -j"$(($(nproc)+1))"
@@ -134,23 +134,23 @@ jobs:
               git clone "https://github.com/mkj/dropbear" && cd "./dropbear"
               ./configure --enable-static --disable-harden
               make PROGRAMS="dropbear dbclient dropbearkey dropbearconvert scp" MULTI=1 -j"$(($(nproc)+1))"
-              strip "./dropbearmulti" ; mv "./dropbearmulti" "/dropbearmulti_aarch64_arm64"
+              strip "./dropbearmulti" ; mv "./dropbearmulti" "/dropbearmulti_aarch64_arm64_Linux"
               make clean ; make PROGRAMS="dropbear dbclient dropbearkey dropbearconvert scp" -j"$(($(nproc)+1))"
-              strip "./dbclient" ; mv "./dbclient" "/dbclient_aarch64_arm64"
-              strip "./dropbear" ; mv "./dropbear" "/dropbear_aarch64_arm64"
-              strip "./dropbearkey" ; mv "./dropbearkey" "/dropbearkey_aarch64_arm64"
-              strip "./dropbearconvert" ; mv "./dropbearconvert" "/dropbearconvert_aarch64_arm64"
-              strip "./scp" ; mv "./scp" "/dropbearscp_aarch64_arm64"
+              strip "./dbclient" ; mv "./dbclient" "/dbclient_aarch64_arm64_Linux"
+              strip "./dropbear" ; mv "./dropbear" "/dropbear_aarch64_arm64_Linux"
+              strip "./dropbearkey" ; mv "./dropbearkey" "/dropbearkey_aarch64_arm64_Linux"
+              strip "./dropbearconvert" ; mv "./dropbearconvert" "/dropbearconvert_aarch64_arm64_Linux"
+              strip "./scp" ; mv "./scp" "/dropbearscp_aarch64_arm64_Linux"
             '
           #Copy 
-          docker cp "arm64v8_debian:./dropbearmulti_aarch64_arm64" "/tmp/releases"
-          docker cp "arm64v8_debian:./dbclient_aarch64_arm64" "/tmp/releases"
-          docker cp "arm64v8_debian:./dropbear_aarch64_arm64" "/tmp/releases"
-          docker cp "arm64v8_debian:./dropbearkey_aarch64_arm64" "/tmp/releases"
-          docker cp "arm64v8_debian:./dropbearconvert_aarch64_arm64" "/tmp/releases"
-          docker cp "arm64v8_debian:./dropbearscp_aarch64_arm64" "/tmp/releases"
+          docker cp "arm64v8_debian:./dropbearmulti_aarch64_arm64_Linux" "/tmp/releases"
+          docker cp "arm64v8_debian:./dbclient_aarch64_arm64_Linux" "/tmp/releases"
+          docker cp "arm64v8_debian:./dropbear_aarch64_arm64_Linux" "/tmp/releases"
+          docker cp "arm64v8_debian:./dropbearkey_aarch64_arm64_Linux" "/tmp/releases"
+          docker cp "arm64v8_debian:./dropbearconvert_aarch64_arm64_Linux" "/tmp/releases"
+          docker cp "arm64v8_debian:./dropbearscp_aarch64_arm64_Linux" "/tmp/releases"
           #meta
-          file /tmp/releases/*_aarch64_arm64 && ls /tmp/releases/*_aarch64_arm64 -lahr
+          file /tmp/releases/*_aarch64_arm64_Linux && ls /tmp/releases/*_aarch64_arm64_Linux -lahr
           #Delete Containers
           docker ps -a -q | xargs docker rm >/dev/null 2>&1
           #Del Docker Images
