@@ -62,7 +62,7 @@ jobs:
             # Prepare for Release
             mkdir -p /tmp/releases
             mv ./git_binaries/* /tmp/releases
-            mv ./git_binaries.tar.gz /tmp/releases
+            mv "./git_binaries_amd_x86_64_Linux.tar.gz" /tmp/releases
           continue-on-error: true
           
         - name: Create Body for Release
