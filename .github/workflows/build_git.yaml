@@ -20,10 +20,16 @@ jobs:
 
         - name: Install CoreUtils & Deps
           run: |
+            #Presets
+            set -x ; set +e
+            #--------------#
             sudo apt-get update -y
             sudo apt-get install automake b3sum build-essential ca-certificates ccache lzip jq make musl musl-dev musl-tools p7zip-full wget -y
             sudo apt-get install curl autoconf bison devscripts flex gcc make bash cmake gettext g++ libtool musl-dev tcl tcl-dev tk -y
-
+            #eget
+            sudo curl -qfsSL "https://raw.githubusercontent.com/Azathothas/Toolpacks/main/x86_64/eget" -o "/usr/local/bin/eget" && sudo chmod +xwr "/usr/local/bin/eget"
+          continue-on-error: true
+          
         - name: Build Git
           run: |
             set -x ; set +e
@@ -43,20 +49,22 @@ jobs:
             make -j$(nproc) && make install
             # Rename ./Release/bin & move them
             mv ./Release/bin ./git_binaries
+            #git-lfs
+            eget "git-lfs/git-lfs" --asset "linux" --asset "64" --asset "^arm" --file "git-lfs" --to "./git_binaries/git-lfs"
             # Strip the binaries
             find ./git_binaries -type f -exec strip {} \;
             sha256sum ./git_binaries/*
             pushd "./git_binaries" 
             find . -type f -exec sh -c 'new_name=$(echo "{}" | sed "s/-/_/g; s/$/_amd_x86_64_Linux/"); mv "{}" "./$new_name"' \;
-            sha256sum *
-            popd
+            sha256sum * ; popd
             # Put Everything in a single Tar
             tar -czvf git_binaries.tar.gz ./git_binaries*
             # Prepare for Release
             mkdir -p /tmp/releases
             mv ./git_binaries/* /tmp/releases
             mv ./git_binaries.tar.gz /tmp/releases
-
+          continue-on-error: true
+          
         - name: Create Body for Release
           run: |
             set +e
