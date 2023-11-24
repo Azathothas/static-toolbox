@@ -58,7 +58,7 @@ jobs:
             find . -type f -exec sh -c 'new_name=$(echo "{}" | sed "s/-/_/g; s/$/_amd_x86_64_Linux/"); mv "{}" "./$new_name"' \;
             sha256sum * ; popd
             # Put Everything in a single Tar
-            tar -czvf git_binaries.tar.gz ./git_binaries*
+            tar -czvf git_binaries_amd_x86_64_Linux.tar.gz ./git_binaries*
             # Prepare for Release
             mkdir -p /tmp/releases
             mv ./git_binaries/* /tmp/releases
