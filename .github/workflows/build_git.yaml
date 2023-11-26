@@ -1,10 +1,13 @@
+## Too much of a headache, a zillion binaries and all of them require custom config.
+# Use: jj git --> https://github.com/martinvonz/jj
+
 name: ⚙️ Build Git Binaries 📦
 #MAX_RUNTIME: 10 Minutes
 #REF: https://github.com/darkvertex/static-git/blob/main/.github/workflows/build.yml
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "15 18 * * *" #  12:00 AM Nepal Time Midnight EveryDay
+  #schedule:
+  #  - cron: "15 18 * * *" #  12:00 AM Nepal Time Midnight EveryDay
   
 env:
   GITHUB_TOKEN: ${{ secrets.STATIC_TOOLBOX }}
@@ -26,6 +29,8 @@ jobs:
             sudo apt-get update -y
             sudo apt-get install automake b3sum build-essential ca-certificates ccache lzip jq make musl musl-dev musl-tools p7zip-full wget -y
             sudo apt-get install curl autoconf bison devscripts flex gcc make bash cmake gettext g++ libtool musl-dev tcl tcl-dev tk -y
+            #for https & ssl support
+            sudo apt-get libcurl4-openssl-dev
             #eget
             sudo curl -qfsSL "https://raw.githubusercontent.com/Azathothas/Toolpacks/main/x86_64/eget" -o "/usr/local/bin/eget" && sudo chmod +xwr "/usr/local/bin/eget"
           continue-on-error: true
@@ -44,25 +49,195 @@ jobs:
             # Configure
             make configure && sed -i 's/qversion/-version/g' configure
             # Prefix
-            ./configure prefix="$(pwd)/Release" LDFLAGS="--static" CFLAGS="${CFLAGS} -static" && cat config.log
-            # make (Puts Binaries in ./Release/bin)
+            ./configure prefix="/usr" LDFLAGS="--static" CFLAGS="${CFLAGS} -static" && cat config.log
+            # make 
             make -j$(nproc) && make install
-            # Rename ./Release/bin & move them
-            mv ./Release/bin ./git_binaries
+            # Move Binaries
+            mkdir "./git_binaries"
+            mv "git" "./git_binaries"
+            mv "git-add" "./git_binaries"
+            mv "git-am" "./git_binaries"
+            mv "git-annotate" "./git_binaries"
+            mv "git-apply" "./git_binaries"
+            mv "git-archimport" "./git_binaries"
+            mv "git-archive" "./git_binaries"
+            mv "git-bisect" "./git_binaries"
+            mv "git-blame" "./git_binaries"
+            mv "git-branch" "./git_binaries"
+            mv "git-bugreport" "./git_binaries"
+            mv "git-bundle" "./git_binaries"
+            mv "git-cat-file" "./git_binaries"
+            mv "git-check-attr" "./git_binaries"
+            mv "git-check-ignore" "./git_binaries"
+            mv "git-check-mailmap" "./git_binaries"
+            mv "git-checkout" "./git_binaries"
+            mv "git-checkout-index" "./git_binaries"
+            mv "git-checkout--worker" "./git_binaries"
+            mv "git-check-ref-format" "./git_binaries"
+            mv "git-cherry" "./git_binaries"
+            mv "git-cherry-pick" "./git_binaries"
+            mv "git-clean" "./git_binaries"
+            mv "git-clone" "./git_binaries"
+            mv "git-column" "./git_binaries"
+            mv "git-commit" "./git_binaries"
+            mv "git-commit-graph" "./git_binaries"
+            mv "git-commit-tree" "./git_binaries"
+            mv "git-config" "./git_binaries"
+            mv "git-count-objects" "./git_binaries"
+            mv "git-credential" "./git_binaries"
+            mv "git-credential-cache" "./git_binaries"
+            mv "git-credential-cache--daemon" "./git_binaries"
+            mv "git-credential-store" "./git_binaries"
+            mv "git-cvsexportcommit" "./git_binaries"
+            mv "git-cvsimport" "./git_binaries"
+            mv "git-cvsserver" "./git_binaries"
+            mv "git-daemon" "./git_binaries"
+            mv "git-describe" "./git_binaries"
+            mv "git-diagnose" "./git_binaries"
+            mv "git-diff" "./git_binaries"
+            mv "git-diff-files" "./git_binaries"
+            mv "git-diff-index" "./git_binaries"
+            mv "git-difftool" "./git_binaries"
+            mv "git-difftool--helper" "./git_binaries"
+            mv "git-diff-tree" "./git_binaries"
+            mv "git-fast-export" "./git_binaries"
+            mv "git-fast-import" "./git_binaries"
+            mv "git-fetch" "./git_binaries"
+            mv "git-fetch-pack" "./git_binaries"
+            mv "git-filter-branch" "./git_binaries"
+            mv "git-fmt-merge-msg" "./git_binaries"
+            mv "git-for-each-ref" "./git_binaries"
+            mv "git-for-each-repo" "./git_binaries"
+            mv "git-format-patch" "./git_binaries"
+            mv "git-fsck" "./git_binaries"
+            mv "git-fsck-objects" "./git_binaries"
+            mv "git-fsmonitor--daemon" "./git_binaries"
+            mv "git-gc" "./git_binaries"
+            mv "git-get-tar-commit-id" "./git_binaries"
+            mv "git-grep" "./git_binaries"
+            mv "git-hash-object" "./git_binaries"
+            mv "git-help" "./git_binaries"
+            mv "git-hook" "./git_binaries"
+            mv "git-http-backend" "./git_binaries"
+            mv "git-imap-send" "./git_binaries"
+            mv "git-index-pack" "./git_binaries"
+            mv "git-init" "./git_binaries"
+            mv "git-init-db" "./git_binaries"
+            mv "git-instaweb" "./git_binaries"
+            mv "git-interpret-trailers" "./git_binaries"
+            mv "git-log" "./git_binaries"
+            mv "git-ls-files" "./git_binaries"
+            mv "git-ls-remote" "./git_binaries"
+            mv "git-ls-tree" "./git_binaries"
+            mv "git-mailinfo" "./git_binaries"
+            mv "git-mailsplit" "./git_binaries"
+            mv "git-maintenance" "./git_binaries"
+            mv "git-merge" "./git_binaries"
+            mv "git-merge-base" "./git_binaries"
+            mv "git-merge-file" "./git_binaries"
+            mv "git-merge-index" "./git_binaries"
+            mv "git-merge-octopus" "./git_binaries"
+            mv "git-merge-one-file" "./git_binaries"
+            mv "git-merge-ours" "./git_binaries"
+            mv "git-merge-recursive" "./git_binaries"
+            mv "git-merge-resolve" "./git_binaries"
+            mv "git-merge-subtree" "./git_binaries"
+            mv "git-mergetool" "./git_binaries"
+            mv "git-mergetool--lib" "./git_binaries"
+            mv "git-merge-tree" "./git_binaries"
+            mv "git-mktag" "./git_binaries"
+            mv "git-mktree" "./git_binaries"
+            mv "git-multi-pack-index" "./git_binaries"
+            mv "git-mv" "./git_binaries"
+            mv "git-name-rev" "./git_binaries"
+            mv "git-notes" "./git_binaries"
+            mv "git-p4" "./git_binaries"
+            mv "git-pack-objects" "./git_binaries"
+            mv "git-pack-redundant" "./git_binaries"
+            mv "git-pack-refs" "./git_binaries"
+            mv "git-patch-id" "./git_binaries"
+            mv "git-prune" "./git_binaries"
+            mv "git-prune-packed" "./git_binaries"
+            mv "git-pull" "./git_binaries"
+            mv "git-push" "./git_binaries"
+            mv "git-quiltimport" "./git_binaries"
+            mv "git-range-diff" "./git_binaries"
+            mv "git-read-tree" "./git_binaries"
+            mv "git-rebase" "./git_binaries"
+            mv "git-receive-pack" "./git_binaries"
+            mv "git-reflog" "./git_binaries"
+            mv "git-remote" "./git_binaries"
+            mv "git-remote-ext" "./git_binaries"
+            mv "git-remote-fd" "./git_binaries"
+            mv "git-repack" "./git_binaries"
+            mv "git-replace" "./git_binaries"
+            mv "git-request-pull" "./git_binaries"
+            mv "git-rerere" "./git_binaries"
+            mv "git-reset" "./git_binaries"
+            mv "git-restore" "./git_binaries"
+            mv "git-revert" "./git_binaries"
+            mv "git-rev-list" "./git_binaries"
+            mv "git-rev-parse" "./git_binaries"
+            mv "git-rm" "./git_binaries"
+            mv "git-send-email" "./git_binaries"
+            mv "git-send-pack" "./git_binaries"
+            mv "git-shell" "./git_binaries"
+            mv "git-sh-i18n" "./git_binaries"
+            mv "git-sh-i18n--envsubst" "./git_binaries"
+            mv "git-shortlog" "./git_binaries"
+            mv "git-show" "./git_binaries"
+            mv "git-show-branch" "./git_binaries"
+            mv "git-show-index" "./git_binaries"
+            mv "git-show-ref" "./git_binaries"
+            mv "git-sh-setup" "./git_binaries"
+            mv "git-sparse-checkout" "./git_binaries"
+            mv "git-stage" "./git_binaries"
+            mv "git-stash" "./git_binaries"
+            mv "git-status" "./git_binaries"
+            mv "git-stripspace" "./git_binaries"
+            mv "git-submodule" "./git_binaries"
+            mv "git-submodule--helper" "./git_binaries"
+            mv "git-svn" "./git_binaries"
+            mv "git-switch" "./git_binaries"
+            mv "git-symbolic-ref" "./git_binaries"
+            mv "git-tag" "./git_binaries"
+            mv "git-unpack-file" "./git_binaries"
+            mv "git-unpack-objects" "./git_binaries"
+            mv "git-update-index" "./git_binaries"
+            mv "git-update-ref" "./git_binaries"
+            mv "git-update-server-info" "./git_binaries"
+            mv "git-upload-archive" "./git_binaries"
+            mv "git-upload-pack" "./git_binaries"
+            mv "git-var" "./git_binaries"
+            mv "git-verify-commit" "./git_binaries"
+            mv "git-verify-pack" "./git_binaries"
+            mv "git-verify-tag" "./git_binaries"
+            mv "git-version" "./git_binaries"
+            mv "git-web--browse" "./git_binaries"
+            mv "git-whatchanged" "./git_binaries"
+            mv "git-worktree" "./git_binaries"
+            mv "git-write-tree" "./git_binaries"
+            mv "scalar" "./git_binaries"            
             #git-lfs
             eget "git-lfs/git-lfs" --asset "linux" --asset "64" --asset "^arm" --file "git-lfs" --to "./git_binaries/git-lfs"
             # Strip the binaries
             find ./git_binaries -type f -exec strip {} \;
             sha256sum ./git_binaries/*
+            #/usr/share/git-core/templates
+            mkdir "./git-templates"
+            mv "./templates/." "./git-templates"
+            # Put Everything in a single Tar
+            tar -czvf /tmp/git_binaries_amd_x86_64_Linux.tar.gz ./git_binaries*
+            tar -czvf /tmp/git_templates_amd_x86_64_Linux.tar.gz ./git-templates*
+            # Rename
             pushd "./git_binaries" 
             find . -type f -exec sh -c 'new_name=$(echo "{}" | sed "s/-/_/g; s/$/_amd_x86_64_Linux/"); mv "{}" "./$new_name"' \;
             sha256sum * ; popd
-            # Put Everything in a single Tar
-            tar -czvf git_binaries_amd_x86_64_Linux.tar.gz ./git_binaries*
             # Prepare for Release
             mkdir -p /tmp/releases
             mv ./git_binaries/* /tmp/releases
-            mv "./git_binaries_amd_x86_64_Linux.tar.gz" /tmp/releases
+            mv "/tmp/git_binaries_amd_x86_64_Linux.tar.gz" /tmp/releases
+            mv "/tmp/git_templates_amd_x86_64_Linux.tar.gz" /tmp/releases
           continue-on-error: true
           
         - name: Create Body for Release
