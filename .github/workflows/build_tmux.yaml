@@ -42,7 +42,7 @@ jobs:
             #cp $(find . -type f -name '*tmux_amd_x86_64_Linux*' ! -name '*.gz' 2>/dev/null) "/tmp/releases"
     
         - name: Upload artifacts
-          uses: actions/upload-artifact@v3
+          uses: actions/upload-artifact@v4
           with:
               name: tmux_amd_x86_64_Linux
               path: /tmp/releases

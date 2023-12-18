@@ -39,7 +39,7 @@ jobs:
           run: $GITHUB_WORKSPACE/build/targets/build_strace.sh x86
 
         - name: Upload artifacts
-          uses: actions/upload-artifact@v3
+          uses: actions/upload-artifact@v4
           with:
               name: ${{ steps.build_strace.outputs.PACKAGED_NAME }}
               path: ${{ steps.build_strace.outputs.PACKAGED_NAME_PATH }}
@@ -63,7 +63,7 @@ jobs:
           run: $GITHUB_WORKSPACE/build/targets/build_strace.sh x86_64
 
         - name: Upload artifacts
-          uses: actions/upload-artifact@v3
+          uses: actions/upload-artifact@v4
           with:
               name: ${{ steps.build_strace.outputs.PACKAGED_NAME }}
               path: ${{ steps.build_strace.outputs.PACKAGED_NAME_PATH }}
@@ -95,7 +95,7 @@ jobs:
           run: $GITHUB_WORKSPACE/build/targets/build_strace.sh armhf
 
         - name: Upload artifacts
-          uses: actions/upload-artifact@v3
+          uses: actions/upload-artifact@v4
           with:
               name: ${{ steps.build_strace.outputs.PACKAGED_NAME }}
               path: ${{ steps.build_strace.outputs.PACKAGED_NAME_PATH }}
@@ -127,7 +127,7 @@ jobs:
             run: $GITHUB_WORKSPACE/build/targets/build_strace.sh aarch64
 
           - name: Upload artifacts
-            uses: actions/upload-artifact@v3
+            uses: actions/upload-artifact@v4
             with:
                 name: ${{ steps.build_strace.outputs.PACKAGED_NAME }}
                 path: ${{ steps.build_strace.outputs.PACKAGED_NAME_PATH }}

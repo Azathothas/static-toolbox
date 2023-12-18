@@ -48,7 +48,7 @@ jobs:
             export RELEASE_NAME="$(ls *.tgz)" && echo "RELEASE_NAME=$RELEASE_NAME" >> $GITHUB_ENV
             export RELEASE_PATH="$(realpath $RELEASE_NAME)" && echo "RELEASE_PATH=$RELEASE_PATH" >> $GITHUB_ENV       
         - name: Upload artifacts
-          uses: actions/upload-artifact@v3
+          uses: actions/upload-artifact@v4
           with:
               name: ${{ env.RELEASE_NAME }}
               path: ${{ env.RELEASE_PATH }}
@@ -87,7 +87,7 @@ jobs:
             export RELEASE_NAME="$(ls *.tgz)" && echo "RELEASE_NAME=$RELEASE_NAME" >> $GITHUB_ENV
             export RELEASE_PATH="$(realpath $RELEASE_NAME)" && echo "RELEASE_PATH=$RELEASE_PATH" >> $GITHUB_ENV        
         - name: Upload artifacts
-          uses: actions/upload-artifact@v3
+          uses: actions/upload-artifact@v4
           with:
               name: ${{ env.RELEASE_NAME }}
               path: ${{ env.RELEASE_PATH }}
@@ -123,7 +123,7 @@ jobs:
             export RELEASE_NAME="$(ls *.tgz)" && echo "RELEASE_NAME=$RELEASE_NAME" >> $GITHUB_ENV
             export RELEASE_PATH="$(realpath $RELEASE_NAME)" && echo "RELEASE_PATH=$RELEASE_PATH" >> $GITHUB_ENV         
         - name: Upload artifacts
-          uses: actions/upload-artifact@v3
+          uses: actions/upload-artifact@v4
           with:
               name: ${{ env.RELEASE_NAME }}
               path: ${{ env.RELEASE_PATH }}
