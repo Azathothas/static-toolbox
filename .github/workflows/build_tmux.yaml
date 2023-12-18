@@ -73,7 +73,7 @@ jobs:
             echo "TMUX_VERSION=$TMUX_VERSION" >> $GITHUB_ENV
 
         - name: Download Artifacts
-          uses: actions/download-artifact@v3
+          uses: actions/download-artifact@v4
           with:
             path: /tmp/releases
 
