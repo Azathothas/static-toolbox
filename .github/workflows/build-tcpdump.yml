@@ -28,7 +28,7 @@ jobs:
           run: $GITHUB_WORKSPACE/build/targets/build_tcpdump.sh x86
 
         - name: Upload artifacts
-          uses: actions/upload-artifact@v3
+          uses: actions/upload-artifact@v4
           with:
               name: ${{ steps.build_tcpdump.outputs.PACKAGED_NAME }}
               path: ${{ steps.build_tcpdump.outputs.PACKAGED_NAME_PATH }}
@@ -49,7 +49,7 @@ jobs:
           run: $GITHUB_WORKSPACE/build/targets/build_tcpdump.sh x86_64
 
         - name: Upload artifacts
-          uses: actions/upload-artifact@v3
+          uses: actions/upload-artifact@v4
           with:
               name: ${{ steps.build_tcpdump.outputs.PACKAGED_NAME }}
               path: ${{ steps.build_tcpdump.outputs.PACKAGED_NAME_PATH }}
@@ -70,7 +70,7 @@ jobs:
           run: $GITHUB_WORKSPACE/build/targets/build_tcpdump.sh armhf
 
         - name: Upload artifacts
-          uses: actions/upload-artifact@v3
+          uses: actions/upload-artifact@v4
           with:
               name: ${{ steps.build_tcpdump.outputs.PACKAGED_NAME }}
               path: ${{ steps.build_tcpdump.outputs.PACKAGED_NAME_PATH }}
@@ -91,7 +91,7 @@ jobs:
           run: $GITHUB_WORKSPACE/build/targets/build_tcpdump.sh aarch64
 
         - name: Upload artifacts
-          uses: actions/upload-artifact@v3
+          uses: actions/upload-artifact@v4
           with:
               name: ${{ steps.build_tcpdump.outputs.PACKAGED_NAME }}
               path: ${{ steps.build_tcpdump.outputs.PACKAGED_NAME_PATH }}
