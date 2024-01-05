@@ -30,7 +30,7 @@ jobs:
             sudo apt-get install automake b3sum build-essential ca-certificates ccache lzip jq make musl musl-dev musl-tools p7zip-full wget -y
             sudo apt-get install curl autoconf bison devscripts flex gcc make bash cmake gettext g++ libtool musl-dev tcl tcl-dev tk -y
             #for https & ssl support
-            sudo apt-get libcurl4-openssl-dev
+            sudo apt-get install libcurl4-openssl-dev -y
             #eget
             sudo curl -qfsSL "https://raw.githubusercontent.com/Azathothas/Toolpacks/main/x86_64/eget" -o "/usr/local/bin/eget" && sudo chmod +xwr "/usr/local/bin/eget"
           continue-on-error: true
