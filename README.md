@@ -1,3 +1,5 @@
+> ℹ️Note: This repo serves as an upstream source for [Azathothas/Toolpacks](https://github.com/Azathothas/Toolpacks) & isn't meant for production use.
+> - Use Binaries from: [Azathothas/Toolpacks](https://github.com/Azathothas/Toolpacks) --> [bin.ajam.dev](https://bin.ajam.dev/)
 
 ---
 - #### 📦 [Azathothas/static-toolbox](https://github.com/Azathothas/static-toolbox) (`Multi-Arch` || `Linux`)
