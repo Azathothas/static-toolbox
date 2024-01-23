@@ -1,0 +1,24 @@
+```mathematica
+120K └─┬ main
+ 76K   ├─┬ build
+ 48K   │ ├─┬ targets
+ 16K   │ │ ├── build_tmux.sh
+4.0K   │ │ ├── build_tcpreplay.sh
+4.0K   │ │ ├── build_tcpdump.sh
+4.0K   │ │ ├── build_strace.sh
+4.0K   │ │ ├── build_socat.sh
+4.0K   │ │ ├── build_openssh.sh
+4.0K   │ │ ├── build_nmap.sh
+4.0K   │ │ └── build_gdb.sh
+ 12K   │ ├── lib.sh
+4.0K   │ ├── install_deps_alpine.sh
+4.0K   │ ├── 02_install_build_compiler.sh
+4.0K   │ └── 01_init.sh
+ 24K   ├─┬ package
+ 20K   │ └─┬ targets
+ 16K   │   └─┬ nmap
+4.0K   │     ├── run-nmap.sh
+4.0K   │     ├── run-nmap.ps1
+4.0K   │     └── package.sh
+ 16K   └── README.md
+```
