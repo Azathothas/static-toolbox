@@ -59,7 +59,7 @@ jobs:
           #Presets
           set +x ; set +e
           #--------------#
-          cd "$GITHUB_WORKSPACE/main"
+          cd "$GITHUB_WORKSPACE/master"
           find . -type f ! -path "./.git/*" -exec dos2unix {} \; 2>/dev/null
         continue-on-error: true
 
@@ -68,7 +68,7 @@ jobs:
           #Presets
           set +x ; set +e
           #--------------#
-          cd "$GITHUB_WORKSPACE/main"
+          cd "$GITHUB_WORKSPACE/master"
           find ".github/workflows" -type f -name "*ml" -exec actionlint {} \;
         continue-on-error: true
 
@@ -77,12 +77,12 @@ jobs:
           #Presets
           set +x ; set +e
           #--------------#
-          cd "$GITHUB_WORKSPACE/main"
+          cd "$GITHUB_WORKSPACE/master"
           #Dust sizes
-          echo '```mathematica' > "$GITHUB_WORKSPACE/main/.github/SIZE.md"
-          dust -b -c -i -r -n 99999999 "$GITHUB_WORKSPACE/main" | tee -a "$GITHUB_WORKSPACE/main/.github/SIZE.md"
-          dust -b -c -i -r -n 99999999 "$GITHUB_WORKSPACE/main" | tee "$GITHUB_WORKSPACE/main/.github/SIZE.txt"
-          echo '```' >> "$GITHUB_WORKSPACE/main/.github/SIZE.md"
+          echo '```mathematica' > "$GITHUB_WORKSPACE/master/.github/SIZE.md"
+          dust -b -c -i -r -n 99999999 "$GITHUB_WORKSPACE/master" | tee -a "$GITHUB_WORKSPACE/master/.github/SIZE.md"
+          dust -b -c -i -r -n 99999999 "$GITHUB_WORKSPACE/master" | tee "$GITHUB_WORKSPACE/master/.github/SIZE.txt"
+          echo '```' >> "$GITHUB_WORKSPACE/master/.github/SIZE.md"
         continue-on-error: true
 
       - name: Get DateTime
@@ -94,7 +94,7 @@ jobs:
 
       - name: Git Pull
         run: |
-          cd "$GITHUB_WORKSPACE/main" && git pull origin main
+          cd "$GITHUB_WORKSPACE/master" && git pull origin main
         continue-on-error: true
 
       - uses: stefanzweifel/git-auto-commit-action@v5
@@ -114,7 +114,7 @@ jobs:
           #touch "$HOME/.rclone.conf"
           echo "${{ secrets.RCLONE_CF_R2_PUB }}" > "$HOME/.rclone.conf"
           #chdir to Repo
-          cd "$GITHUB_WORKSPACE/main"
+          cd "$GITHUB_WORKSPACE/master"
           #Git pull
           git pull origin main --no-edit 2>/dev/null
           #Del Bloat
