@@ -1,0 +1,243 @@
+name: ⚙️ Build sudo 📦
+#MAX_RUNTIME:  
+on:
+  workflow_dispatch:
+  schedule:
+    #- cron: "0 0 * * 0" #  12:00 AM UTC Every Sunday (05:45 AM Morning Nepal) 
+    - cron: "0 0 */3 * *" #Every 3 days
+env:
+  GITHUB_TOKEN: ${{ secrets.STATIC_TOOLBOX }}
+  
+jobs:
+#------------------------------------------------------------------------------------#
+#------------------------------------------------------------------------------------#
+  build-sudo:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+      
+    steps:        
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          path: main
+          filter: "blob:none" #https://github.blog/2020-12-21-get-up-to-speed-with-partial-clone-and-shallow-clone/
+
+      - name: Install CoreUtils & Deps
+        run: |
+          #presets
+          set -x ; set +e
+          #-------------#
+          sudo apt-get update -y
+          sudo apt-get install automake b3sum build-essential ca-certificates ccache lzip jq make musl musl-dev musl-tools p7zip-full wget -y
+          sudo apt-get install -y --no-install-recommends autoconf automake autopoint binutils bison build-essential ca-certificates flex file jq patch patchelf pkg-config python3-pip qemu-user-static wget xsltproc
+        continue-on-error: true
+        
+      - name: Install Addons
+        run: |
+          #presets
+          set -x ; set +e
+          #-------------#
+          #7z
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/7z" -o "/usr/bin/7z" && sudo chmod +xwr "/usr/bin/7z"
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/7z" -o "/usr/local/bin/7z" && sudo chmod +xwr "/usr/local/bin/7z"
+          #action-lint
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/actionlint" -o "/usr/local/bin/actionlint" && sudo chmod +xwr "/usr/local/bin/actionlint"
+          #b3sum
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/b3sum" -o "/usr/bin/b3sum" && sudo chmod +xwr "/usr/bin/b3sum"
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/b3sum" -o "/usr/local/bin/b3sum" && sudo chmod +xwr "/usr/local/bin/b3sum"
+          #delta
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/delta" -o "/usr/local/bin/delta" && sudo chmod +xwr "/usr/local/bin/delta"
+          #dust
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/dust" -o "/usr/local/bin/dust" && sudo chmod +xwr "/usr/local/bin/dust"
+          #eget
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/eget" -o "/usr/local/bin/eget" && sudo chmod +xwr "/usr/local/bin/eget"
+          #git-sizer
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/git-sizer" -o "/usr/local/bin/git-sizer" && sudo chmod +xwr "/usr/local/bin/git-sizer"
+          #rclone
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/rclone" -o "/usr/local/bin/rclone" && sudo chmod +xwr "/usr/local/bin/rclone"
+          #validtoml
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/validtoml" -o "/usr/local/bin/validtoml" && sudo chmod +xwr "/usr/local/bin/validtoml"
+          #Yq
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/yq" -o "/usr/local/bin/yq" && sudo chmod +xwr "/usr/local/bin/yq"
+          #Yj
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/yj" -o "/usr/local/bin/yj" && sudo chmod +xwr "/usr/local/bin/yj"
+        continue-on-error: true
+
+      - name: Setup Env
+        run: |
+          #Presets
+          set -x ; set +e
+          #--------------#
+          # Create Output Dir
+          mkdir -p "/tmp/releases"
+          # Get $VERSION
+            pushd "$(mktemp -d)" > /dev/null 2>&1 && git clone --filter "blob:none" "https://github.com/sudo-project/sudo" && cd "./sudo"
+            export SUDO_VERSION="$(git tag --sort=-creatordate | head -n 1)"
+            echo -e "\n[+] Sudo Version: $SUDO_VERSION\n"
+          # Export it to ENV
+          echo "SUDO_VERSION=$SUDO_VERSION" >> $GITHUB_ENV
+        continue-on-error: true
+
+      - name: Build sudo for amd_x86_64 (zig-x86_64-linux-musl)
+        run: |
+          #Presets
+          set -x ; set +e
+          #--------------#
+          if ! command -v zig > /dev/null 2>&1; then
+            #Install Zig
+               curl -qfsSL "https://pub.ajam.dev/repos/Azathothas/Arsenal/misc/Linux/Debian/install_zig.sh" | sudo bash
+            #Export Zig Path 
+               export ZIG_PATH="/usr/local/zig:/usr/local/zig/lib:/usr/local/zig/lib/include:$PATH"
+          else
+            #Export Default Path
+               export ZIG_PATH="$PATH"
+          fi
+          ##DEPS :: zlib (cc)
+          #export FLAGS
+          export AR="zig ar"
+          export CC="zig cc -target x86_64-linux-musl"
+          export CXX="zig c++ -target x86_64-linux-musl"
+          export DLLTOOL="zig dlltool"
+          export HOST_CC="zig cc -target x86_64-linux-musl"
+          export HOST_CXX="zig c++ -target x86_64-linux-musl"
+          export OBJCOPY="zig objcopy"
+          export RANLIB="zig ranlib"
+          ##Get Source
+           pushd "$(mktemp -d)" > /dev/null 2>&1 && git clone --filter "blob:none" "https://github.com/sudo-project/sudo" && cd "./sudo"
+           #Export Version
+           export SUDO_VERSION="$(git tag --sort=-creatordate | head -n 1)"
+           echo "SUDO_VERSION=$SUDO_VERSION" >> $GITHUB_ENV 2>/dev/null
+           export RELEASE_SUDO_VERSION=$(git tag --sort=-creatordate | head -n 1 | sed 's/^v//; s/-.*$//')
+           echo -e "\n[+] Sudo Version: $RELEASE_SUDO_VERSION\n"
+           echo "RELEASE_SUDO_VERSION=$RELEASE_SUDO_VERSION" >> $GITHUB_ENV 2>/dev/null
+           #Checkout to latest
+           git checkout "$SUDO_VERSION"
+           #Cleanup
+           make dist clean 2>/dev/null ; make clean 2>/dev/null
+           bash "./autogen.sh" 2>/dev/null
+           #Configure: https://www.sudo.ws/docs/install/#available-configure-options
+           # use `unset AR CC CXX HOST_CC HOST_CXX` to compile a dynamic sudo with additional support
+           # --enable-openssl | --enable-wolfssl --> for log server & tls
+           # --with-selinux --> for selinux
+           # --enable-python --> For python plugins
+           "./configure" --disable-shared --disable-shared-libutil --enable-static --enable-static-sudoers --enable-pie --disable-wolfssl --disable-openssl --enable-offensive-insults --with-insults --with-all-insults
+           #Compile
+           PATH="$ZIG_PATH" make CFLAGS="${CFLAGS} -I/usr/local/zig/lib/include -I/usr/local/zig/lib/libc/musl/include -I/usr/local/include -I/usr/include " LDFLAGS="${LDFLAGS} -L/usr/local/zig/lib -L/usr/local/lib -L/usr/lib -L/usr/local/lib/pkgconfig -static" --jobs="$(($(nproc)+1))" --keep-going 
+           #Test
+           sudo chown root "./src/sudo" ; sudo chmod 4755 "./src/sudo"
+           strip "./src/sudo" && du -sh "./src/sudo"
+           file "./src/sudo" && ldd "./src/sudo"
+           "./src/sudo" --version
+          #Move to releases
+          mv "./src/sudo" "/tmp/releases/sudo_amd_x86_64" ; popd > /dev/null 2>&1
+          #Tar
+          cd "/tmp/releases" && tar -cvf "./sudo_amd_x86_64.tar" "./sudo_amd_x86_64"
+          #meta
+          file "/tmp/releases/sudo_amd_x86_64" && ls "/tmp/releases/sudo_amd_x86_64" -lahr
+          file "/tmp/releases/sudo_amd_x86_64.tar" && ls "/tmp/releases/sudo_amd_x86_64.tar" -lahr
+        continue-on-error: true
+
+      - name: Build sudo for aarch64_arm64 (zig-aarch64-linux-musl)
+        run: |
+          #Presets
+          set -x ; set +e
+          #--------------#
+          if ! command -v zig > /dev/null 2>&1; then
+            #Install Zig
+               curl -qfsSL "https://pub.ajam.dev/repos/Azathothas/Arsenal/misc/Linux/Debian/install_zig.sh" | sudo bash
+            #Export Zig Path 
+               export ZIG_PATH="/usr/local/zig:/usr/local/zig/lib:/usr/local/zig/lib/include:$PATH"
+          else
+            #Export Default Path
+               export ZIG_PATH="$PATH"
+          fi
+          ##DEPS :: zlib (cc)
+          #export FLAGS
+          export AR="zig ar"
+          export CC="zig cc -target aarch64-linux-musl"
+          export CXX="zig c++ -target aarch64-linux-musl"
+          export DLLTOOL="zig dlltool"
+          export HOST_CC="zig cc -target aarch64-linux-musl"
+          export HOST_CXX="zig c++ -target aarch64-linux-musl"
+          export OBJCOPY="zig objcopy"
+          export RANLIB="zig ranlib"
+          ##Get Source
+           pushd "$(mktemp -d)" > /dev/null 2>&1 && git clone --filter "blob:none" "https://github.com/sudo-project/sudo" && cd "./sudo"
+           #Export Version
+           export SUDO_VERSION="$(git tag --sort=-creatordate | head -n 1)"
+           echo "SUDO_VERSION=$SUDO_VERSION" >> $GITHUB_ENV 2>/dev/null
+           export RELEASE_SUDO_VERSION=$(git tag --sort=-creatordate | head -n 1 | sed 's/^v//; s/-.*$//')
+           echo -e "\n[+] Sudo Version: $RELEASE_SUDO_VERSION\n"
+           echo "RELEASE_SUDO_VERSION=$RELEASE_SUDO_VERSION" >> $GITHUB_ENV 2>/dev/null
+           #Checkout to latest
+           git checkout "$SUDO_VERSION"
+           #Cleanup
+           make dist clean 2>/dev/null ; make clean 2>/dev/null
+           bash "./autogen.sh" 2>/dev/null
+           #Configure: https://www.sudo.ws/docs/install/#available-configure-options
+           # use `unset AR CC CXX HOST_CC HOST_CXX` to compile a dynamic sudo with additional support
+           # --enable-openssl | --enable-wolfssl --> for log server & tls
+           # --with-selinux --> for selinux
+           # --enable-python --> For python plugins
+           "./configure" --disable-shared --disable-shared-libutil --enable-static --enable-static-sudoers --enable-pie --disable-wolfssl --disable-openssl --enable-offensive-insults --with-insults --with-all-insults
+           #Compile
+           PATH="$ZIG_PATH" make CFLAGS="${CFLAGS} -I/usr/local/zig/lib/include -I/usr/local/zig/lib/libc/musl/include -I/usr/local/include -I/usr/include " LDFLAGS="${LDFLAGS} -L/usr/local/zig/lib -L/usr/local/lib -L/usr/lib -L/usr/local/lib/pkgconfig -static" --jobs="$(($(nproc)+1))" --keep-going 
+           #Test
+           sudo chown root "./src/sudo" ; sudo chmod 4755 "./src/sudo"
+           strip "./src/sudo" && du -sh "./src/sudo"
+           file "./src/sudo" && ldd "./src/sudo"
+           "./src/sudo" --version
+          #Move to releases
+          mv "./src/sudo" "/tmp/releases/sudo_aarch64_arm64" ; popd > /dev/null 2>&1
+          #Tar
+          cd "/tmp/releases" && tar -cvf "./sudo_aarch64_arm64.tar" "./sudo_aarch64_arm64"
+          #meta
+          file "/tmp/releases/sudo_aarch64_arm64" && ls "/tmp/releases/sudo_aarch64_arm64" -lahr
+          file "/tmp/releases/sudo_aarch64_arm64.tar" && ls "/tmp/releases/sudo_aarch64_arm64.tar" -lahr
+        continue-on-error: true
+
+      - name: Create Body for Release
+        run: |
+          #Presets
+          set -x ; set +e
+          #--------------#
+          cd "/tmp/releases"
+          echo -e "" >> /tmp/RELEASE_NOTE.md
+          echo '---' >> /tmp/RELEASE_NOTE.md
+          echo '```console' >> /tmp/RELEASE_NOTE.md
+          echo -e "" >> /tmp/RELEASE_NOTE.md
+          echo "Changelog: 'https://www.sudo.ws/releases/stable/'" >> /tmp/RELEASE_NOTE.md
+          echo -e "" >> /tmp/RELEASE_NOTE.md
+          echo -e "--> METADATA" >> /tmp/RELEASE_NOTE.md
+          /bin/bash -c 'PS4="$ "; file * | grep -v '.txt' '&>> /tmp/RELEASE_NOTE.md
+          echo -e "" >> /tmp/RELEASE_NOTE.md
+          echo -e "--> SHA256SUM" >> /tmp/RELEASE_NOTE.md
+          /bin/bash -c 'PS4="$ ";sha256sum * | grep -v '.txt' ' &>> /tmp/RELEASE_NOTE.md
+          echo -e '```\n' >> /tmp/RELEASE_NOTE.md
+          echo -e "" >> /tmp/RELEASE_NOTE.md
+          echo '---' >> /tmp/RELEASE_NOTE.md
+          echo -e "" >> /tmp/RELEASE_NOTE.md
+          echo '- #### Sizes' >> /tmp/RELEASE_NOTE.md
+          echo -e "" >> /tmp/RELEASE_NOTE.md
+          echo '```console' >> /tmp/RELEASE_NOTE.md
+          /bin/bash -c 'PS4="$ "; ls -lh ./* | grep -v '.txt' | awk "{print \$5, \$9}" | column -t' &>> /tmp/RELEASE_NOTE.md
+          echo -e "" >> /tmp/RELEASE_NOTE.md
+          echo '```' >> /tmp/RELEASE_NOTE.md
+          echo -e "" >> /tmp/RELEASE_NOTE.md
+        continue-on-error: true
+      
+      - name: Releaser
+        uses: softprops/action-gh-release@v0.1.15
+        with:
+          name: "sudo ${{ env.SUDO_VERSION }}"
+          tag_name: "sudo-${{ env.SUDO_VERSION }}"
+          prerelease: false
+          draft: false
+          generate_release_notes: false
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          body_path: "/tmp/RELEASE_NOTE.md"
+          files: |
+            /tmp/releases/*
+#-------------------------------------------------------------#
