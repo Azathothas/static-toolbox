@@ -94,6 +94,7 @@ jobs:
             #Export Default Path
                export ZIG_PATH="$PATH"
           fi
+          PATH="/usr/local/zig:/usr/local/zig/lib:/usr/local/zig/lib/include:$PATH" zig version
           ##DEPS :: zlib (cc)
           #export FLAGS
           export AR="zig ar"
@@ -122,9 +123,9 @@ jobs:
            # --enable-openssl | --enable-wolfssl --> for log server & tls
            # --with-selinux --> for selinux
            # --enable-python --> For python plugins
-           "./configure" --disable-shared --disable-shared-libutil --enable-static --enable-static-sudoers --enable-pie --disable-wolfssl --disable-openssl --enable-offensive-insults --with-insults --with-all-insults
+           PATH="/usr/local/zig:/usr/local/zig/lib:/usr/local/zig/lib/include:$PATH" "./configure" --disable-shared --disable-shared-libutil --enable-static --enable-static-sudoers --enable-pie --disable-wolfssl --disable-openssl --enable-offensive-insults --with-insults --with-all-insults
            #Compile
-           PATH="$ZIG_PATH" make CFLAGS="${CFLAGS} -I/usr/local/zig/lib/include -I/usr/local/zig/lib/libc/musl/include -I/usr/local/include -I/usr/include " LDFLAGS="${LDFLAGS} -L/usr/local/zig/lib -L/usr/local/lib -L/usr/lib -L/usr/local/lib/pkgconfig -static" --jobs="$(($(nproc)+1))" --keep-going 
+           PATH="/usr/local/zig:/usr/local/zig/lib:/usr/local/zig/lib/include:$PATH" make CFLAGS="${CFLAGS} -I/usr/local/zig/lib/include -I/usr/local/zig/lib/libc/musl/include -I/usr/local/include -I/usr/include " LDFLAGS="${LDFLAGS} -L/usr/local/zig/lib -L/usr/local/lib -L/usr/lib -L/usr/local/lib/pkgconfig -static" --jobs="$(($(nproc)+1))" --keep-going 
            #Test
            sudo chown root "./src/sudo" ; sudo chmod 4755 "./src/sudo"
            strip "./src/sudo" && du -sh "./src/sudo"
@@ -181,9 +182,9 @@ jobs:
            # --enable-openssl | --enable-wolfssl --> for log server & tls
            # --with-selinux --> for selinux
            # --enable-python --> For python plugins
-           "./configure" --disable-shared --disable-shared-libutil --enable-static --enable-static-sudoers --enable-pie --disable-wolfssl --disable-openssl --enable-offensive-insults --with-insults --with-all-insults
+           PATH="/usr/local/zig:/usr/local/zig/lib:/usr/local/zig/lib/include:$PATH" "./configure" --disable-shared --disable-shared-libutil --enable-static --enable-static-sudoers --enable-pie --disable-wolfssl --disable-openssl --enable-offensive-insults --with-insults --with-all-insults
            #Compile
-           PATH="$ZIG_PATH" make CFLAGS="${CFLAGS} -I/usr/local/zig/lib/include -I/usr/local/zig/lib/libc/musl/include -I/usr/local/include -I/usr/include " LDFLAGS="${LDFLAGS} -L/usr/local/zig/lib -L/usr/local/lib -L/usr/lib -L/usr/local/lib/pkgconfig -static" --jobs="$(($(nproc)+1))" --keep-going 
+           PATH="/usr/local/zig:/usr/local/zig/lib:/usr/local/zig/lib/include:$PATH" make CFLAGS="${CFLAGS} -I/usr/local/zig/lib/include -I/usr/local/zig/lib/libc/musl/include -I/usr/local/include -I/usr/include " LDFLAGS="${LDFLAGS} -L/usr/local/zig/lib -L/usr/local/lib -L/usr/lib -L/usr/local/lib/pkgconfig -static" --jobs="$(($(nproc)+1))" --keep-going 
            #Test
            sudo chown root "./src/sudo" ; sudo chmod 4755 "./src/sudo"
            strip "./src/sudo" && du -sh "./src/sudo"
