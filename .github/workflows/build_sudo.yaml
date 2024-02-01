@@ -32,6 +32,9 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install automake b3sum build-essential ca-certificates ccache lzip jq make musl musl-dev musl-tools p7zip-full wget -y
           sudo apt-get install -y --no-install-recommends autoconf automake autopoint binutils bison build-essential ca-certificates flex file jq patch patchelf pkg-config python3-pip qemu-user-static wget xsltproc
+          #Install Build Dependencies (arm64)
+          sudo apt install binutils-aarch64-linux-gnu -y 2>/dev/null
+          sudo apt-get install "g++-arm-linux-gnueabi" "g++-arm-linux-gnueabihf" "g++-aarch64-linux-gnu" qemu-user-static -y 2>/dev/null
         continue-on-error: true
         
       - name: Install Addons
@@ -127,8 +130,8 @@ jobs:
            #Compile
            PATH="/usr/local/zig:/usr/local/zig/lib:/usr/local/zig/lib/include:$PATH" make CFLAGS="${CFLAGS} -I/usr/local/zig/lib/include -I/usr/local/zig/lib/libc/musl/include -I/usr/local/include -I/usr/include " LDFLAGS="${LDFLAGS} -L/usr/local/zig/lib -L/usr/local/lib -L/usr/lib -L/usr/local/lib/pkgconfig -static" --jobs="$(($(nproc)+1))" --keep-going 
            #Test
+           sudo strip "./src/sudo" && du -sh "./src/sudo"
            sudo chown root "./src/sudo" ; sudo chmod 4755 "./src/sudo"
-           strip "./src/sudo" && du -sh "./src/sudo"
            file "./src/sudo" && ldd "./src/sudo"
            "./src/sudo" --version
           #Move to releases
@@ -186,10 +189,10 @@ jobs:
            #Compile
            PATH="/usr/local/zig:/usr/local/zig/lib:/usr/local/zig/lib/include:$PATH" make CFLAGS="${CFLAGS} -I/usr/local/zig/lib/include -I/usr/local/zig/lib/libc/musl/include -I/usr/local/include -I/usr/include " LDFLAGS="${LDFLAGS} -L/usr/local/zig/lib -L/usr/local/lib -L/usr/lib -L/usr/local/lib/pkgconfig -static" --jobs="$(($(nproc)+1))" --keep-going 
            #Test
+           sudo aarch64-linux-gnu-objcopy --preserve-dates --verbose --strip-all "./src/sudo" && du -sh "./src/sudo"
            sudo chown root "./src/sudo" ; sudo chmod 4755 "./src/sudo"
-           strip "./src/sudo" && du -sh "./src/sudo"
            file "./src/sudo" && ldd "./src/sudo"
-           "./src/sudo" --version
+           qemu-aarch64-static "./src/sudo" --version
           #Move to releases
           mv "./src/sudo" "/tmp/releases/sudo_aarch64_arm64" ; popd > /dev/null 2>&1
           #Tar
