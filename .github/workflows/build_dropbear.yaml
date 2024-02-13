@@ -231,7 +231,7 @@ jobs:
           ##Make Only Server: https://github.com/mkj/dropbear/blob/master/SMALL.md
           #make clean ; make PROGRAMS="dropbear" -j"$(($(nproc)+1))"
           #meta
-          file $SYSTMP/releases/*amd_x86_64 && ls $SYSTMP/releases/*amd_x86_64 -lahr ; popd > /dev/null 2>&1
+          file $SYSTMP/releases/* && ls $SYSTMP/releases/* -lahr ; popd > /dev/null 2>&1
           #strip
           strip $SYSTMP/releases/*
         continue-on-error: true
@@ -274,7 +274,7 @@ jobs:
           docker cp "arm64v8_debian:./dropbearconvert_aarch64_arm64_Linux" "$SYSTMP/releases"
           docker cp "arm64v8_debian:./dropbearscp_aarch64_arm64_Linux" "$SYSTMP/releases"
           #meta
-          file $SYSTMP/releases/*_aarch64_arm64_Linux && ls $SYSTMP/releases/*_aarch64_arm64_Linux -lahr
+          file $SYSTMP/releases/* && ls $SYSTMP/releases/* -lahr
           #Delete Containers
           docker ps -a -q | xargs docker rm >/dev/null 2>&1
           #Del Docker Images
