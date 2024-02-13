@@ -33,45 +33,44 @@ jobs:
         
       - name: Install Addons
         run: |
-          set +e
+          #presets
+          set -x ; set +e
+          #-------------#
+          #7z
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/7z" -o "/usr/bin/7z" && sudo chmod +xwr "/usr/bin/7z"
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/7z" -o "/usr/local/bin/7z" && sudo chmod +xwr "/usr/local/bin/7z"
+          #action-lint
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/actionlint" -o "/usr/local/bin/actionlint" && sudo chmod +xwr "/usr/local/bin/actionlint"
+          #b3sum
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/b3sum" -o "/usr/bin/b3sum" && sudo chmod +xwr "/usr/bin/b3sum"
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/b3sum" -o "/usr/local/bin/b3sum" && sudo chmod +xwr "/usr/local/bin/b3sum"
+          #delta
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/delta" -o "/usr/local/bin/delta" && sudo chmod +xwr "/usr/local/bin/delta"
+          #dust
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/dust" -o "/usr/local/bin/dust" && sudo chmod +xwr "/usr/local/bin/dust"
           #eget
-          curl -qfsSL "https://zyedidia.github.io/eget.sh" | bash
-          sudo mv ./eget* "/usr/local/bin/eget"
-          sudo chmod +xwr "/usr/local/bin/eget"
-        continue-on-error: true
-
-      - name: Install 7z
-        run: |
-          #Presets
-          set -x ; set +e
-          #--------------#
-          cd $(mktemp -d) && curl -qfsSLJO "https://www.7-zip.org/$(curl -qfsSL "https://www.7-zip.org/download.html" | grep -o 'href="[^"]*"' | sed 's/href="//' | grep 'linux-x64.tar.xz' | sed 's/"$//' | sort | tail -n 1)"
-          find . -type f -name '*.xz' -exec tar -xf {} \;
-          #sudo rm $(which 7z) 2>/dev/null ; sudo rm $(which 7z) 2>/dev/null
-          sudo find . -type f -name '7zzs' ! -name '*.xz' -exec cp {} "/usr/local/bin/7z" \;
-          sudo chmod +xwr "/usr/local/bin/7z"
-          sudo find . -type f -name '7zzs' ! -name '*.xz' -exec cp {} "/usr/bin/7z" \;
-          sudo chmod +xwr "/usr/bin/7z"
-          7z -h
-        continue-on-error: true
-
-      - name: Install upX
-        run: |
-          #Presets
-          set -x ; set +e
-          #--------------#        
-          cd $(mktemp -d) && curl -qfLJO "$(curl -qfsSL https://api.github.com/repos/upx/upx/releases/latest | jq -r '.assets[].browser_download_url' | grep -i 'amd64_linux')"
-          find . -type f -name '*tar*' -exec tar -xvf {} \;
-          sudo find . -type f -name 'upx' -exec mv {} "$(which upx)" \;  
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/eget" -o "/usr/local/bin/eget" && sudo chmod +xwr "/usr/local/bin/eget"
+          #git-sizer
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/git-sizer" -o "/usr/local/bin/git-sizer" && sudo chmod +xwr "/usr/local/bin/git-sizer"
+          #rclone
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/rclone" -o "/usr/local/bin/rclone" && sudo chmod +xwr "/usr/local/bin/rclone"
+          #validtoml
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/validtoml" -o "/usr/local/bin/validtoml" && sudo chmod +xwr "/usr/local/bin/validtoml"
+          #Yq
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/yq" -o "/usr/local/bin/yq" && sudo chmod +xwr "/usr/local/bin/yq"
+          #Yj
+          sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/yj" -o "/usr/local/bin/yj" && sudo chmod +xwr "/usr/local/bin/yj"
         continue-on-error: true
 
       - name: Setup Env
         run: |
           #Presets
           set -x ; set +e
+          #tmp
+          SYSTMP="$(dirname $(mktemp -u))" && export SYSTMP="$SYSTMP"
           #--------------#
           # Create Output Dir
-          mkdir -p "/tmp/releases"
+          mkdir -p "$SYSTMP/releases"
           # Get $VERSION
           export DROPBEAR_VERSION="$(curl -qfsSL https://api.github.com/repos/mkj/dropbear/tags | jq -r '.[0].name')"
           # If we get rate-limited, git clone the repo
@@ -83,33 +82,157 @@ jobs:
           echo "DROPBEAR_VERSION=$DROPBEAR_VERSION" >> $GITHUB_ENV
         continue-on-error: true
 
-      - name: Build dropbear for amd_x86_64 (Natively)
+      - name: Install/Update Cargo
+        run: |
+          # Presets
+          set -x ; set +e
+          #--------------#
+          #Install
+          bash <(curl -qfsSL "https://sh.rustup.rs") -y
+          source "$HOME/.bashrc"
+          rustc --version && cargo --version
+          #Cross-rs
+          cargo install cross --git "https://github.com/cross-rs/cross"
+          sudo ldconfig && sudo ldconfig -p
+        continue-on-error: true
+
+      - name: Install/Update golang
         run: |
           #Presets
           set -x ; set +e
           #--------------#
+          echo "yes" | bash <(curl -qfsSL "https://git.io/go-installer")
+          source "$HOME/.bashrc"
+          go version
+        continue-on-error: true
+
+      - name: Install Meson & Ninja
+        run: |
+          # Presets
+          set -x ; set +e
+          #--------------#
+          #Install
+          sudo rm "/usr/bin/meson" "/usr/bin/ninja" 2>/dev/null
+          pip install meson ninja --upgrade
+          pip install meson ninja --break-system-packages --upgrade 2>/dev/null
+          #python3 -m pip install meson ninja --upgrade
+          sudo ln -s "$HOME/.local/bin/meson" "/usr/bin/meson" 2>/dev/null
+          sudo ln -s "$HOME/.local/bin/ninja" "/usr/bin/ninja" 2>/dev/null
+          sudo chmod +xwr "/usr/bin/meson" "/usr/bin/ninja"
+          #version
+          meson --version ; ninja --version
+          sudo ldconfig && sudo ldconfig -pn
+        continue-on-error: true
+
+      - name: Install Mold
+        run: |
+          # Presets
+          set -x ; set +e
+          #--------------#
+          #Download latest release
+          pushd "$(mktemp -d)" > /dev/null 2>&1 && eget "rui314/mold" --asset "x86_64-linux.tar.gz" --download-only --to "./mold.tar.gz"
+          #Extract Archive
+          find . -type f -name "*.tar.gz*" -exec tar -xvf {} --strip-components=1 \;
+          #Main Binary
+          sudo rm -rf "/usr/local/bin/ld.mold" 2>/dev/null ; sudo rm -rf "/usr/local/libexec/mold" 2>/dev/null
+          sudo cp "./bin/mold" "/usr/local/bin/mold" ; sudo chmod +xwr "/usr/local/bin/mold"
+          #symlinks 
+          # /usr/local/bin/ld.mold -> mold
+          sudo ln -s "/usr/local/bin/mold" "/usr/local/bin/ld.mold"
+          # /usr/local/libexec/mold/ld --> /usr/local/bin/mold
+          sudo mkdir -p "/usr/local/libexec/mold" && sudo ln -s "/usr/local/bin/mold" "/usr/local/libexec/mold/ld" ; sudo chmod +xwr "/usr/local/libexec/mold"/*
+          #lib : /usr/local/lib/mold/mold-wrapper.so
+          sudo cp -r "./lib/." "/usr/local/lib/" ; sudo chmod +xwr "/usr/local/lib/mold"/* ; popd > /dev/null 2>&1
+          #Test
+          mold --version
+          sudo ldconfig && sudo ldconfig -p
+        continue-on-error: true
+
+      - name: Install Bootlin Toolchains
+        run: |
+          # Presets
+          set -x ; set +e
+          #--------------# 
+          ##Clean
+          sudo rm "/opt/toolchains" -rf 2>/dev/null
+          ##https://pub.ajam.dev/toolchains/x86_64-glibc-stable/ --> /opt/toolchains/x86_64-buildroot-linux-gnu
+          pushd "$($TMPDIRS)" > /dev/null 2>&1 && eget "https://pub.ajam.dev/toolchains/x86_64-glibc-stable.tar.bz2" --download-only
+          find . -type f -name "*.tar*" -exec tar -xf {} \;
+          sudo mkdir -p "/opt/toolchains" 2>/dev/null
+          sudo mv "$(find . -maxdepth 1 -type d -exec basename {} \; | grep -Ev '^\.$' | xargs -I {} realpath {})" "/opt/toolchains/x86_64-buildroot-linux-gnu"
+          cd "/opt/toolchains/x86_64-buildroot-linux-gnu" && sudo bash "./relocate-sdk.sh" ; popd > /dev/null 2>&1
+          ##https://pub.ajam.dev/toolchains/x86_64-musl-stable/ --> /opt/toolchains/x86_64-buildroot-linux-musl
+          pushd "$($TMPDIRS)" > /dev/null 2>&1 && eget "https://pub.ajam.dev/toolchains/x86_64-musl-stable.tar.bz2" --download-only
+          find . -type f -name "*.tar*" -exec tar -xf {} \;
+          sudo mkdir -p "/opt/toolchains" 2>/dev/null
+          sudo mv "$(find . -maxdepth 1 -type d -exec basename {} \; | grep -Ev '^\.$' | xargs -I {} realpath {})" "/opt/toolchains/x86_64-buildroot-linux-musl"
+          cd "/opt/toolchains/x86_64-buildroot-linux-musl" && sudo bash "./relocate-sdk.sh" ; popd > /dev/null 2>&1
+          ##https://pub.ajam.dev/toolchains/x86_64-uclibc-stable/ --> /opt/toolchains/x86_64-buildroot-linux-uclibc
+          pushd "$($TMPDIRS)" > /dev/null 2>&1 && eget "https://pub.ajam.dev/toolchains/x86_64-uclibc-stable.tar.bz2" --download-only
+          find . -type f -name "*.tar*" -exec tar -xf {} \;
+          sudo mkdir -p "/opt/toolchains" 2>/dev/null
+          sudo mv "$(find . -maxdepth 1 -type d -exec basename {} \; | grep -Ev '^\.$' | xargs -I {} realpath {})" "/opt/toolchains/x86_64-buildroot-linux-uclibc"
+          cd "/opt/toolchains/x86_64-buildroot-linux-uclibc" && sudo bash "./relocate-sdk.sh" ; popd > /dev/null 2>&1
+          ##Test
+          echo -e "\n\n[+] Toolchains\n"
+          du -h --max-depth="1" "/opt/toolchains" 2>/dev/null | sort -hr ; echo -e "\n\n"
+        continue-on-error: true
+
+      - name: Install Zig
+        run: |
+          # Presets
+          set -x ; set +e
+          #--------------#        
+          bash <(curl -qfsSL "https://raw.githubusercontent.com/Azathothas/Arsenal/main/misc/Linux/Debian/install_zig.sh")
+        continue-on-error: true
+
+      - name: Build dropbear for amd_x86_64 (Natively)
+        run: |
+          #Presets
+          set -x ; set +e
+          export PATH="$HOME/bin:$HOME/.cargo/bin:$HOME/.cargo/env:$HOME/.go/bin:$HOME/go/bin:$HOME/miniconda3/bin:$HOME/miniconda3/condabin:/usr/local/zig:/usr/local/zig/lib:/usr/local/zig/lib/include:/usr/local/musl/bin:/usr/local/musl/lib:/usr/local/musl/include:$PATH"
+          #--------------#
           #Get Source
-          pushd "$(mktemp -d)" && git clone "https://github.com/mkj/dropbear" && cd "./dropbear"
-          #Configure Static
-          ./configure --enable-static --disable-harden
+          pushd "$(mktemp -d)" > /dev/null 2>&1 && git clone --filter "blob:none" "https://github.com/mkj/dropbear" && cd "./dropbear"
+          #Configure Toolchains
+          export TOOLCHAIN_BASE="x86_64-buildroot-linux-musl"
+          export TOOLCHAIN_ROOT="/opt/toolchains/$TOOLCHAIN_BASE"
+          export TOOLCHAIN_SYSROOT="$TOOLCHAIN_ROOT/$TOOLCHAIN_BASE/sysroot"
+          export TOOLCHAIN_INCLUDE="$TOOLCHAIN_ROOT/include"
+          export TOOLCHAIN_LIB="$TOOLCHAIN_ROOT/lib"
+          export CROSS_COMPILE="$TOOLCHAIN_ROOT/bin/$TOOLCHAIN_BASE-"
+          # Build FLAGS (no zig cc)
+          unset AR CC CFLAGS CXX CXXFLAGS DLLTOOL HOST_CC HOST_CXX LDFLAGS OBJCOPY RANLIB
+          unset CC && export CC="${CROSS_COMPILE}cc"
+          unset CXX && export CXX="${CROSS_COMPILE}c++"
+          unset DLLTOOL && export DLLTOOL="zig dlltool"
+          unset HOST_CC && export HOST_CC="${CROSS_COMPILE}cc"
+          unset HOST_CXX && export HOST_CXX="${CROSS_COMPILE}c++"
+          unset OBJCOPY && export OBJCOPY="zig objcopy"
+          unset RANLIB && export RANLIB="zig ranlib"
+          unset CFLAGS && export CFLAGS="-O2 -flto=auto -fPIE -fpie -static -w -pipe --sysroot=$TOOLCHAIN_SYSROOT -I$TOOLCHAIN_SYSROOT/usr/include -I$TOOLCHAIN_ROOT/include"
+          unset CXXFLAGS && export CXXFLAGS="${CFLAGS}"
+          unset LDFLAGS && export LDFLAGS="-static -static-pie -pie -s -Wl,-S -Wl,--build-id=none --sysroot=$TOOLCHAIN_SYSROOT -L$TOOLCHAIN_SYSROOT/usr/lib -L$TOOLCHAIN_ROOT/lib"
+          #Configure
+          "./configure" --enable-static --disable-harden
           #Make a multicall-binary : https://github.com/mkj/dropbear/blob/master/MULTI.md
           make PROGRAMS="dropbear dbclient dropbearkey dropbearconvert scp" MULTI=1 -j"$(($(nproc)+1))"
-          mv "./dropbearmulti" "/tmp/releases/dropbearmulti_amd_x86_64_Linux"
+          mv "./dropbearmulti" "$SYSTMP/releases/dropbearmulti_amd_x86_64_Linux"
           #Make Single Binaries : https://github.com/mkj/dropbear/blob/master/INSTALL.md
           make clean ; make PROGRAMS="dropbear dbclient dropbearkey dropbearconvert scp" -j"$(($(nproc)+1))"
           #Move to releases
-          mv "./dbclient" "/tmp/releases/dbclient_amd_x86_64_Linux"
-          mv "./dropbear" "/tmp/releases/dropbear_amd_x86_64_Linux"
-          mv "./dropbearkey" "/tmp/releases/dropbearkey_amd_x86_64_Linux"
-          mv "./dropbearconvert" "/tmp/releases/dropbearconvert_amd_x86_64_Linux"
-          mv "./scp" "/tmp/releases/dropbearscp_amd_x86_64_Linux"
+          mv "./dbclient" "$SYSTMP/releases/dbclient_amd_x86_64_Linux"
+          mv "./dropbear" "$SYSTMP/releases/dropbear_amd_x86_64_Linux"
+          mv "./dropbearkey" "$SYSTMP/releases/dropbearkey_amd_x86_64_Linux"
+          mv "./dropbearconvert" "$SYSTMP/releases/dropbearconvert_amd_x86_64_Linux"
+          mv "./scp" "$SYSTMP/releases/dropbearscp_amd_x86_64_Linux"
           #Doesn't really reduce much size
           ##Make Only Server: https://github.com/mkj/dropbear/blob/master/SMALL.md
           #make clean ; make PROGRAMS="dropbear" -j"$(($(nproc)+1))"
           #meta
-          file /tmp/releases/*amd_x86_64 && ls /tmp/releases/*amd_x86_64 -lahr ; popd
+          file $SYSTMP/releases/*amd_x86_64 && ls $SYSTMP/releases/*amd_x86_64 -lahr ; popd > /dev/null 2>&1
           #strip
-          strip /tmp/releases/*
+          strip $SYSTMP/releases/*
         continue-on-error: true
 
       - name: Build dropbear for aarch64_arm64_arm64-v8 (Docker)
@@ -143,14 +266,14 @@ jobs:
               strip "./scp" ; mv "./scp" "/dropbearscp_aarch64_arm64_Linux"
             '
           #Copy 
-          docker cp "arm64v8_debian:./dropbearmulti_aarch64_arm64_Linux" "/tmp/releases"
-          docker cp "arm64v8_debian:./dbclient_aarch64_arm64_Linux" "/tmp/releases"
-          docker cp "arm64v8_debian:./dropbear_aarch64_arm64_Linux" "/tmp/releases"
-          docker cp "arm64v8_debian:./dropbearkey_aarch64_arm64_Linux" "/tmp/releases"
-          docker cp "arm64v8_debian:./dropbearconvert_aarch64_arm64_Linux" "/tmp/releases"
-          docker cp "arm64v8_debian:./dropbearscp_aarch64_arm64_Linux" "/tmp/releases"
+          docker cp "arm64v8_debian:./dropbearmulti_aarch64_arm64_Linux" "$SYSTMP/releases"
+          docker cp "arm64v8_debian:./dbclient_aarch64_arm64_Linux" "$SYSTMP/releases"
+          docker cp "arm64v8_debian:./dropbear_aarch64_arm64_Linux" "$SYSTMP/releases"
+          docker cp "arm64v8_debian:./dropbearkey_aarch64_arm64_Linux" "$SYSTMP/releases"
+          docker cp "arm64v8_debian:./dropbearconvert_aarch64_arm64_Linux" "$SYSTMP/releases"
+          docker cp "arm64v8_debian:./dropbearscp_aarch64_arm64_Linux" "$SYSTMP/releases"
           #meta
-          file /tmp/releases/*_aarch64_arm64_Linux && ls /tmp/releases/*_aarch64_arm64_Linux -lahr
+          file $SYSTMP/releases/*_aarch64_arm64_Linux && ls $SYSTMP/releases/*_aarch64_arm64_Linux -lahr
           #Delete Containers
           docker ps -a -q | xargs docker rm >/dev/null 2>&1
           #Del Docker Images
@@ -160,7 +283,7 @@ jobs:
       - name: Create Body for Release
         run: |
           set +e
-          cd /tmp/releases
+          cd $SYSTMP/releases
           echo -e "" >> /tmp/RELEASE_NOTE.md
           echo '---' >> /tmp/RELEASE_NOTE.md
           echo '```console' >> /tmp/RELEASE_NOTE.md
@@ -197,4 +320,4 @@ jobs:
           body_path: "/tmp/RELEASE_NOTE.md"
           files: |
             /tmp/releases/*
-#-------------------------------------------------------------
+#-------------------------------------------------------------#
