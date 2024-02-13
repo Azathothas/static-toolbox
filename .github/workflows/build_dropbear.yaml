@@ -68,6 +68,7 @@ jobs:
           set -x ; set +e
           #tmp
           SYSTMP="$(dirname $(mktemp -u))" && export SYSTMP="$SYSTMP"
+          echo "SYSTMP=$SYSTMP" >> "$GITHUB_ENV"
           #--------------#
           # Create Output Dir
           mkdir -p "$SYSTMP/releases"
@@ -79,7 +80,7 @@ jobs:
             export DROPBEAR_VERSION=$(git tag --sort=-creatordate | head -n 1)
           fi
           # Export it to ENV
-          echo "DROPBEAR_VERSION=$DROPBEAR_VERSION" >> $GITHUB_ENV
+          echo "DROPBEAR_VERSION=$DROPBEAR_VERSION" >> "$GITHUB_ENV"
         continue-on-error: true
 
       - name: Install/Update Cargo
