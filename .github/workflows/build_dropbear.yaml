@@ -156,19 +156,19 @@ jobs:
           ##Clean
           sudo rm "/opt/toolchains" -rf 2>/dev/null
           ##https://pub.ajam.dev/toolchains/x86_64-glibc-stable/ --> /opt/toolchains/x86_64-buildroot-linux-gnu
-          pushd "$($TMPDIRS)" > /dev/null 2>&1 && eget "https://pub.ajam.dev/toolchains/x86_64-glibc-stable.tar.bz2" --download-only
+          pushd "$(mktemp -d)" > /dev/null 2>&1 && eget "https://pub.ajam.dev/toolchains/x86_64-glibc-stable.tar.bz2" --download-only
           find . -type f -name "*.tar*" -exec tar -xf {} \;
           sudo mkdir -p "/opt/toolchains" 2>/dev/null
           sudo mv "$(find . -maxdepth 1 -type d -exec basename {} \; | grep -Ev '^\.$' | xargs -I {} realpath {})" "/opt/toolchains/x86_64-buildroot-linux-gnu"
           cd "/opt/toolchains/x86_64-buildroot-linux-gnu" && sudo bash "./relocate-sdk.sh" ; popd > /dev/null 2>&1
           ##https://pub.ajam.dev/toolchains/x86_64-musl-stable/ --> /opt/toolchains/x86_64-buildroot-linux-musl
-          pushd "$($TMPDIRS)" > /dev/null 2>&1 && eget "https://pub.ajam.dev/toolchains/x86_64-musl-stable.tar.bz2" --download-only
+          pushd "$(mktemp -d)" > /dev/null 2>&1 && eget "https://pub.ajam.dev/toolchains/x86_64-musl-stable.tar.bz2" --download-only
           find . -type f -name "*.tar*" -exec tar -xf {} \;
           sudo mkdir -p "/opt/toolchains" 2>/dev/null
           sudo mv "$(find . -maxdepth 1 -type d -exec basename {} \; | grep -Ev '^\.$' | xargs -I {} realpath {})" "/opt/toolchains/x86_64-buildroot-linux-musl"
           cd "/opt/toolchains/x86_64-buildroot-linux-musl" && sudo bash "./relocate-sdk.sh" ; popd > /dev/null 2>&1
           ##https://pub.ajam.dev/toolchains/x86_64-uclibc-stable/ --> /opt/toolchains/x86_64-buildroot-linux-uclibc
-          pushd "$($TMPDIRS)" > /dev/null 2>&1 && eget "https://pub.ajam.dev/toolchains/x86_64-uclibc-stable.tar.bz2" --download-only
+          pushd "$(mktemp -d)" > /dev/null 2>&1 && eget "https://pub.ajam.dev/toolchains/x86_64-uclibc-stable.tar.bz2" --download-only
           find . -type f -name "*.tar*" -exec tar -xf {} \;
           sudo mkdir -p "/opt/toolchains" 2>/dev/null
           sudo mv "$(find . -maxdepth 1 -type d -exec basename {} \; | grep -Ev '^\.$' | xargs -I {} realpath {})" "/opt/toolchains/x86_64-buildroot-linux-uclibc"
