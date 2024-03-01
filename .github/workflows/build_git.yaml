@@ -32,7 +32,7 @@ jobs:
             #for https & ssl support
             sudo apt-get install libcurl4-openssl-dev -y
             #eget
-            sudo curl -qfsSL "https://raw.githubusercontent.com/Azathothas/Toolpacks/main/x86_64/eget" -o "/usr/local/bin/eget" && sudo chmod +xwr "/usr/local/bin/eget"
+            sudo curl -qfsSL "https://bin.ajam.dev/x86_64_Linux/eget" -o "/usr/local/bin/eget" && sudo chmod +xwr "/usr/local/bin/eget"
           continue-on-error: true
           
         - name: Build Git
