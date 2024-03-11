@@ -310,7 +310,7 @@ jobs:
         continue-on-error: true
       
       - name: Releaser
-        uses: softprops/action-gh-release@v0.1.15
+        uses: softprops/action-gh-release@v2.0.3
         with:
           name: "DropBear ${{ env.DROPBEAR_VERSION }}"
           tag_name: "dropbear-${{ env.DROPBEAR_VERSION }}"

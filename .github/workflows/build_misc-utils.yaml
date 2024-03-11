@@ -374,7 +374,7 @@ jobs:
         continue-on-error: true
         
       - name: Releaser
-        uses: softprops/action-gh-release@v0.1.15
+        uses: softprops/action-gh-release@v2.0.3
         with:
           name: "misc-utils Weekly ${{ env.SAFE_NEPALI_TIME }}"
           tag_name: "misc_utils_${{ env.SAFE_NEPALI_TIME }}"

@@ -167,7 +167,7 @@ jobs:
         continue-on-error: true
       
       - name: Releaser
-        uses: softprops/action-gh-release@v0.1.15
+        uses: softprops/action-gh-release@v2.0.3
         with:
           name: "Util-Linux ${{ env.UTILLINUX_VERSION }}"
           tag_name: "util-linux-${{ env.UTILLINUX_VERSION }}"
