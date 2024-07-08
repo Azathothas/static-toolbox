@@ -163,7 +163,7 @@ jobs:
         continue-on-error: true
       
       - name: Releaser
-        uses: softprops/action-gh-release@v0.1.15
+        uses: softprops/action-gh-release@v2.0.6
         with:
           name: "gzip ${{ env.GZIP_VERSION }}"
           tag_name: "gzip-${{ env.GZIP_VERSION }}"
