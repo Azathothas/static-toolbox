@@ -168,7 +168,7 @@ jobs:
         continue-on-error: true
       
       - name: Releaser
-        uses: softprops/action-gh-release@v0.1.15
+        uses: softprops/action-gh-release@v2.2.1
         with:
           name: "CoreUtils ${{ env.COREUTILS_VERSION }}"
           tag_name: "coreutils-${{ env.COREUTILS_VERSION }}"
